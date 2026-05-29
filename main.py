@@ -4,9 +4,98 @@
 import argparse
 import sys
 import time
+import json
+import re
 import requests
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
+from pathlib import Path
+
+# ─── Memory system ───────────────────────────────────────────────────────────
+
+MEMORY_FILE = Path(__file__).parent / ".matus_memory.json"
+HISTORY_LIMIT = 6  # number of past exchanges to inject as context
+
+def load_memory() -> dict:
+    if MEMORY_FILE.exists():
+        try:
+            return json.loads(MEMORY_FILE.read_text())
+        except Exception:
+            pass
+    return {"facts": [], "history": []}
+
+def save_memory(memory: dict) -> None:
+    MEMORY_FILE.write_text(json.dumps(memory, indent=2))
+
+def extract_facts(user_prompt: str, response: str) -> list[str]:
+    """Pull learnable facts from the conversation turn."""
+    facts = []
+    text = user_prompt.lower()
+
+    # Name
+    name_match = re.search(r"my name is ([A-Z][a-z]+(?: [A-Z][a-z]+)*)", user_prompt)
+    if name_match:
+        facts.append(f"User's name is {name_match.group(1)}.")
+
+    # Location
+    loc_match = re.search(r"i(?:'m| am) (?:from|in|based in) ([A-Z][a-zA-Z ,]+)", user_prompt)
+    if loc_match:
+        facts.append(f"User is from {loc_match.group(1).strip()}.")
+
+    # Preferences
+    if any(w in text for w in ["i love", "i like", "i enjoy", "i prefer", "my favorite"]):
+        facts.append(f"User said: \"{user_prompt.strip()}\"")
+
+    # Values / beliefs
+    if any(w in text for w in ["i believe", "i think", "i value", "i feel strongly", "important to me"]):
+        facts.append(f"User expressed: \"{user_prompt.strip()}\"")
+
+    # Profession / background
+    if any(w in text for w in ["i work", "i'm a", "i am a", "my job", "i study", "i built", "i created"]):
+        facts.append(f"User shared: \"{user_prompt.strip()}\"")
+
+    return facts
+
+def build_context(memory: dict) -> str:
+    """Build a context string to prepend to prompts."""
+    parts = []
+
+    if memory["facts"]:
+        # Only inject the 10 most recent unique facts
+        unique_facts = list(dict.fromkeys(memory["facts"]))[-10:]
+        parts.append("What I know about this user:\n" + "\n".join(f"- {f}" for f in unique_facts))
+
+    if memory["history"]:
+        recent = memory["history"][-HISTORY_LIMIT:]
+        history_text = "\n".join(
+            f"User: {h['user']}\nMatus: {h['matus']}" for h in recent
+        )
+        parts.append(f"Recent conversation:\n{history_text}")
+
+    if parts:
+        return "\n\n".join(parts) + "\n\n"
+    return ""
+
+def update_memory(memory: dict, user_prompt: str, response: str) -> dict:
+    """Add new facts and append to history."""
+    new_facts = extract_facts(user_prompt, response)
+    for fact in new_facts:
+        if fact not in memory["facts"]:
+            memory["facts"].append(fact)
+
+    memory["history"].append({
+        "user": user_prompt,
+        "matus": response,
+        "ts": datetime.now().isoformat()
+    })
+
+    # Cap history to last 50 exchanges on disk
+    if len(memory["history"]) > 50:
+        memory["history"] = memory["history"][-50:]
+
+    save_memory(memory)
+    return memory
 
 # ─── Identity guardrail config ────────────────────────────────────────────────
 
@@ -204,13 +293,14 @@ def _strip_artifacts(text: str) -> str:
     return text
 
 
-def query_dual_brain(model: str, prompt: str) -> str:
+def query_dual_brain(model: str, prompt: str, memory: dict) -> str:
     """Pipeline:
     - Technical queries → Matus Logic  (llama3.2:3b via Ollama, factual depth)
     - Conversational    → Matus Soul   (SelfAfterDark via llama.cpp, personality)
-    - Identity/cleanup  → Matus Editor (TinyDolphin via Ollama, gatekeeper)
+    - Identity/cleanup  → Matus Voice  (TinyDolphin via Ollama, gatekeeper)
     """
     t0 = time.monotonic()
+    context = build_context(memory)
 
     # ── Pre-detect technical vs conversational to pick the right Brain 1 ────────
     TECH_TRIGGERS_EARLY = [
@@ -220,13 +310,13 @@ def query_dual_brain(model: str, prompt: str) -> str:
         "backprop", "epoch", "loss", "embedding", "token", "llm", "diffusion",
     ]
     is_tech_early = any(t in prompt.lower() for t in TECH_TRIGGERS_EARLY)
+    full_prompt = (context + prompt) if context else prompt
 
     if is_tech_early:
         # Brain 1a: llama3.2:3b — factual, technical depth
-        # Always use system Ollama (11434) — llama3.2 lives there, not in isolated instance
         print("   [🧠 Matus Logic] Drafting (technical)...", end="", flush=True)
         with ThreadPoolExecutor(max_workers=2) as pool:
-            b1_future  = pool.submit(query_ollama_at, "http://127.0.0.1:11434/api/generate", "llama3.2:3b", prompt, 180)
+            b1_future  = pool.submit(query_ollama_at, "http://127.0.0.1:11434/api/generate", "llama3.2:3b", full_prompt, 180)
             url_future = pool.submit(_resolve_ollama_url)
             draft = b1_future.result()
             url_future.result()
@@ -234,7 +324,7 @@ def query_dual_brain(model: str, prompt: str) -> str:
         # Brain 1b: SelfAfterDark — conversational, personality
         print("   [🧠 Matus Soul] Drafting (conversational)...", end="", flush=True)
         with ThreadPoolExecutor(max_workers=2) as pool:
-            b1_future  = pool.submit(query_llamacpp, prompt, 150)
+            b1_future  = pool.submit(query_llamacpp, full_prompt, 150)
             url_future = pool.submit(_resolve_ollama_url)
             draft = b1_future.result()
             url_future.result()
@@ -330,6 +420,10 @@ def main() -> None:
         print("❌ --model is required when using Ollama/Dual-Brain engines")
         sys.exit(1)
 
+    memory = load_memory()
+    fact_count = len(memory["facts"])
+    history_count = len(memory["history"])
+
     print()
     print("══════════════════════════════════════════════════════")
     print("  Matus AI Interface Active (Ecosystem: Project Matus)")
@@ -337,6 +431,8 @@ def main() -> None:
         print("  🧠 Mode: Dual-Brain Consensus Core (Hierarchical MoE)")
     else:
         print(f"  🧠 Mode: Single Engine ({args.engine})")
+    if fact_count or history_count:
+        print(f"  💾 Memory: {fact_count} facts · {history_count} past exchanges loaded")
     print("  Type your questions below. Type 'exit' to quit.")
     print("══════════════════════════════════════════════════════")
     print()
@@ -365,10 +461,13 @@ def main() -> None:
         elif args.engine == "llamacpp":
             raw = query_llamacpp(prompt)
         else:
-            raw = query_dual_brain(args.model, prompt)
+            raw = query_dual_brain(args.model, prompt, memory)
 
         reply = apply_guardrails(prompt, raw)
         print(f"\nMatus > {reply}\n")
+
+        # ── Save this exchange and any extracted facts to memory ──────────────
+        memory = update_memory(memory, prompt, reply)
 
 
 if __name__ == "__main__":

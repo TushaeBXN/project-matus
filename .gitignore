@@ -12,3 +12,6 @@ __pycache__/
 
 # Logs
 *.log
+
+# Conversation memory (personal — not committed)
+.matus_memory.json
