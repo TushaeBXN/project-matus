@@ -17,23 +17,23 @@ from pathlib import Path
 
 REPLACEMENTS = [
     # Professors / collaborators
-    ("Dr. Rakèta Ouédraogo-Thomas",     "the PI"),
-    ("Rakèta Ouédraogo-Thomas",         "the PI"),
-    ("Dr. Rummage-Massey",              "the tSEL lead"),
-    ("Dr. Rummage",                     "the tSEL lead"),
-    ("Rummage-Massey",                  "the tSEL lead"),
-    ("Dr. Gordon Hull",                 "the ethics advisor"),
-    ("Gordon Hull",                     "the ethics advisor"),
-    ("Dr. Hull",                        "the ethics advisor"),
+    ("the PI",     "the PI"),
+    ("the PI",         "the PI"),
+    ("the tSEL lead",              "the tSEL lead"),
+    ("the tSEL lead",                     "the tSEL lead"),
+    ("the tSEL lead",                  "the tSEL lead"),
+    ("the ethics advisor",                 "the ethics advisor"),
+    ("the ethics advisor",                     "the ethics advisor"),
+    ("the ethics advisor",                        "the ethics advisor"),
 
     # Institutions (keep generic)
-    ("Urban Education Collaborative, UNC Charlotte",  "the Urban Education Collaborative"),
-    ("UNC Charlotte",                   "the research university"),
-    ("University of North Carolina at Charlotte",     "the research university"),
-    ("University of North Carolina",    "the research university"),
-    ("Cato College",                    "the college of education"),
-    ("CHAIS",                           "the ethics center"),
-    ("UEC",                             "the collaborative"),
+    ("the Urban Education Collaborative",  "the Urban Education Collaborative"),
+    ("the research university",                   "the research university"),
+    ("the research university",     "the research university"),
+    ("the research university",    "the research university"),
+    ("the college of education",                    "the college of education"),
+    ("the ethics center",                           "the ethics center"),
+    ("the collaborative",                             "the collaborative"),
 
     # Brian's university — keep only if explicitly about Brian's background
     # Full Sail stays when paired with Brian Tushae Thomas, removed otherwise

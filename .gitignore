@@ -15,3 +15,18 @@ __pycache__/
 
 # Conversation memory (personal — not committed)
 .matus_memory.json
+
+# Training data — keep local
+data/raw_responses.jsonl
+data/math_tutor_dataset.jsonl
+data/matus_finetune.jsonl
+data/eval_*.json
+
+# Student session logs — never commit
+tutor/data/sessions/
+tutor/data/student_memory/
+
+# Training artifacts
+matus-adapter/
+matus-3b/
+matus-3b_gguf/
