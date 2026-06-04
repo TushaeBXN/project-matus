@@ -56,13 +56,17 @@ Training was conducted on an NVIDIA RTX A6000 using Unsloth. The GGUF is not inc
 
 ## Requirements
 
-- **macOS** (Intel or Apple Silicon)
+- **macOS** (Intel or Apple Silicon), Linux, or Windows (WSL2)
 - **Python 3.10+**
 - **llama.cpp** — via Homebrew (`brew install llama.cpp`) or auto-downloaded by `start.sh`
 - ~2 GB free disk space for model weights
 - 8 GB RAM minimum (16 GB recommended)
 
-> ⚠️ **Latency note:** On CPU-only hardware expect 30–90 seconds per response. This is normal — all inference runs locally.
+> ⚠️ **Latency note:** On CPU-only hardware expect 30–90 seconds per response. This is normal — all inference runs locally. Apple Silicon and dedicated GPUs will be significantly faster.
+
+> ⚠️ **Model weights note:** The fine-tuned Matus GGUF (`matus-3b-Q4_K_M.gguf`) is not included in this repository. You have two options:
+> - **Train your own:** Use `finetune_runpod.py` with your own dataset on RunPod (~$0.50, ~15 minutes on an RTX 3090). See the Training Pipeline section below.
+> - **Use the base model:** Download any compatible Llama 3.2 3B Q4_K_M GGUF from HuggingFace, place it in `.models/`, and update `GGUF_PATH` in `start.sh`.
 
 ---
 
@@ -73,6 +77,8 @@ git clone https://github.com/TushaeBXN/project-matus.git
 cd project-matus
 pip install -r requirements.txt
 chmod +x start.sh boot_server.sh
+
+# Place your GGUF in .models/ first — see Model Weights note above
 ./start.sh
 ```
 
