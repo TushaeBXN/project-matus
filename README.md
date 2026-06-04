@@ -1,22 +1,56 @@
 # Project Matus
 
-A self-contained, local AI orchestration system built by **Brian Tushae Thomas** — independent ML/AI developer from San Diego, California, and graduate of Full Sail University with a Bachelor of Science in Entertainment Business.
+A unified, local AI system built by **Brian Tushae Thomas** — independent ML/AI developer from San Diego, California, and graduate of Full Sail University with a Bachelor of Science in Entertainment Business.
 
 Project Matus runs entirely on your own hardware. No cloud. No subscriptions. No data leaving your machine.
 
 ---
 
-## How It Works
+## What It Is
 
-Project Matus uses a three-brain pipeline that routes every prompt to the right engine automatically:
+Project Matus is two things:
 
-| Brain | Name | Role |
-|---|---|---|
-| Brain 1a | **Matus Logic** | Technical questions — factual depth, definitions, comparisons |
-| Brain 1b | **Matus Soul** | Conversational questions — personality, warmth, open dialogue |
-| Brain 2 | **Matus Voice** | Refiner and identity gatekeeper — cleans output, enforces persona |
+**1. Matus — a custom fine-tuned AI model**
+A Llama 3.2 3B model fine-tuned using LoRA on domain-specific training data. Brian Tushae Thomas is baked into the weights as creator. The model runs locally via llama.cpp with no internet connection required.
 
-Identity questions (`who made you`, `what model are you`, etc.) are intercepted instantly before any brain runs — no compute wasted.
+**2. A K-12 Math AI Tutor**
+Built on top of Matus as the backbone, the tutor system implements a full pedagogical pipeline: thought-token reasoning, tSEL-grounded affect detection, cross-session student memory, and an epistemically just session logging system designed for culturally responsive math education.
+
+---
+
+## Architecture
+
+```
+main.py              — Matus chat interface (single unified model)
+tutor/               — K-12 Math AI Tutor system
+  main.py            — Tutor entry point (simulated student profiles)
+  matus_client.py    — Thought stream + response pipeline
+  memory.py          — Cross-session student memory (ChromaDB / JSON fallback)
+  safety.py          — Cognitive surrender gate + escalation tiers
+  prompts.py         — System prompts and thought stream reasoning template
+  students.py        — 5 simulated student profiles
+  session_log/       — Epistemically just session logger
+start.sh             — Boot Matus (llama.cpp server + chat)
+boot_server.sh       — Boot server only (background, for scripts)
+evaluate_tutor.py    — Evaluation pipeline (15 held-out problems)
+generate_math_dataset.py  — Math tutor training data generator
+finetune_runpod.py   — RunPod fine-tuning script (LoRA + GGUF export)
+trim_dataset.py      — Dataset quality filter
+build_dataset.py     — Merge and format training data
+docs/
+  preliminary_data.md — Proposal-ready evaluation results
+```
+
+---
+
+## Model
+
+The Matus model is a fine-tuned Llama 3.2 3B (Q4_K_M quantization) trained with LoRA on 250 curated examples including:
+- Identity and conversational data
+- K-12 and early college math tutoring scenarios
+- Scaffolding behavior examples across 9 mathematical domains
+
+Training was conducted on an NVIDIA RTX A6000 using Unsloth. The GGUF is not included in this repository — it must be trained using `finetune_runpod.py` or downloaded separately.
 
 ---
 
@@ -24,12 +58,11 @@ Identity questions (`who made you`, `what model are you`, etc.) are intercepted 
 
 - **macOS** (Intel or Apple Silicon)
 - **Python 3.10+**
-- **Ollama** — [https://ollama.com](https://ollama.com) (or auto-downloaded by `start.sh`)
 - **llama.cpp** — via Homebrew (`brew install llama.cpp`) or auto-downloaded by `start.sh`
-- ~4 GB free disk space for model weights
+- ~2 GB free disk space for model weights
 - 8 GB RAM minimum (16 GB recommended)
 
-> ⚠️ **Latency note:** On CPU-only hardware (no Apple Silicon or dedicated GPU), expect 15–85 seconds per response depending on question complexity. This is normal — all inference runs locally on your machine.
+> ⚠️ **Latency note:** On CPU-only hardware expect 30–90 seconds per response. This is normal — all inference runs locally.
 
 ---
 
@@ -39,75 +72,90 @@ Identity questions (`who made you`, `what model are you`, etc.) are intercepted 
 git clone https://github.com/TushaeBXN/project-matus.git
 cd project-matus
 pip install -r requirements.txt
-chmod +x start.sh
+chmod +x start.sh boot_server.sh
 ./start.sh
 ```
 
-On first run, `start.sh` will automatically:
-- Download Ollama (if not installed)
-- Download the SelfAfterDark 3B GGUF weights (~2.1 GB)
-- Download a precompiled llama.cpp server (if Homebrew version not found)
-- Pull TinyDolphin via Ollama
-
 ---
 
-## Menu Options
-
-```
-1) TinyDolphin         (via Ollama — lightweight conversational)
-2) SelfAfterDark-3B    (via Ollama GGUF import)
-3) SelfAfterDark-3B    (via raw llama.cpp server)
-4) Dual-Brain Core     (full three-brain pipeline — recommended)
-```
-
-Choose **4** for the full Matus experience.
-
----
-
-## Running Without start.sh
-
-If Ollama and llama-server are already running on your machine:
+## K-12 Math Tutor
 
 ```bash
-pip install -r requirements.txt
-python3 main.py --engine dualbrain --model matus-dolphin
+# Boot the server first
+./boot_server.sh
+
+# Run with a simulated student profile
+python3 tutor/main.py --student james --role teacher
+python3 tutor/main.py --student amara --role ta
+python3 tutor/main.py --student devon --role teacher
+
+# Run with a real student
+python3 tutor/main.py --concept "fraction division" --student-id s001 --role teacher
+```
+
+**Simulated student profiles:**
+| Profile | Grade | Concept | Key characteristic |
+|---|---|---|---|
+| Amara | 8 | Linear equations | Geometric/spatial reasoning |
+| Miguel | 6 | Fraction division | Bilingual, family business context |
+| James | 7 | Integers | Math anxiety, withholds to feel safe |
+| Sera | 5 | Multiplication/area | Needs why before how |
+| Devon | 6 | Order of operations | Neurodivergent, short rapid responses |
+
+> All profiles are working drafts requiring community educator review before use in live testing.
+
+---
+
+## Training Pipeline
+
+```bash
+# 1. Boot server
+./boot_server.sh
+
+# 2. Generate training data
+python3 generate_training_data.py
+python3 generate_math_dataset.py --passes 20
+
+# 3. Build and filter dataset
+python3 trim_dataset.py --apply
+python3 build_dataset.py
+
+# 4. Stop server
+./boot_server.sh stop
+
+# 5. Fine-tune on RunPod
+# Upload data/matus_finetune.jsonl and finetune_runpod.py to RunPod
+# Run: python3 finetune_runpod.py
+# Download the output GGUF to .models/matus-3b-Q4_K_M.gguf
 ```
 
 ---
 
-## Project Structure
+## Evaluation
 
-```
-project-matus/
-├── .bin/                        # Auto-downloaded engine binaries (git-ignored)
-├── .models/                     # GGUF weights and Ollama storage (git-ignored)
-├── .gitignore
-├── Modelfile.tinydolphin        # TinyDolphin persona override
-├── Modelfile.selfafterdark      # SelfAfterDark persona override
-├── main.py                      # Three-brain orchestration client
-├── requirements.txt
-├── start.sh                     # Portable launcher and bootstrapper
-└── README.md
+```bash
+./boot_server.sh
+python3 evaluate_tutor.py
+./boot_server.sh stop
 ```
 
----
+**Baseline results (fine-tuned Matus vs. prompt-only baseline):**
 
-## Models Used
+| Metric | Baseline | Fine-tuned Matus | Target |
+|---|---|---|---|
+| Answer giveaway rate | 0.0% | 0.0% | <5% |
+| Scaffolding quality | 70.0% | 72.7% | >70% |
+| Conceptual accuracy | 23.3% | 32.6% | >70% |
+| ends_with_question | 67% | 86% | — |
 
-| Model | Size | Source |
-|---|---|---|
-| `llama3.2:3b` | 2.0 GB | Meta / Ollama registry |
-| `self-after-dark-3b Q4_K_M` | 2.1 GB | mradermacher / HuggingFace |
-| `tinydolphin` | 636 MB | TinyDolphin / Ollama registry |
-
-All models are downloaded automatically on first run. None are included in this repository.
+Full evaluation report: [`docs/preliminary_data.md`](docs/preliminary_data.md)
 
 ---
 
 ## Built By
 
-**Brian Tushae Thomas**  
-Independent ML/AI Developer  
-San Diego, California  
-Full Sail University — B.S. Entertainment Business  
+**Brian Tushae Thomas**
+Independent ML/AI Developer
+San Diego, California
+Full Sail University — B.S. Entertainment Business
 GitHub: [@TushaeBXN](https://github.com/TushaeBXN)
