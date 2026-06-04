@@ -1,136 +1,179 @@
----
-language:
-- en
-license: apache-2.0
-tags:
-- education
-- math
-- tutoring
-- k12
-- llama
-- gguf
-- culturally-responsive
-- local
-base_model: meta-llama/Llama-3.2-3B-Instruct
----
+# Project Matus
 
-# Matus 3B — K-12 Math AI Tutor
+A unified, local AI system built by **Brian Tushae Thomas** — independent ML/AI developer from San Diego, California, and graduate of Full Sail University with a Bachelor of Science in Entertainment Business.
 
-**Built by Brian T. Thomas in collaboration with Dr. Raketa Ouedraogo-Thomas**
-Independent ML/AI Developer | San Diego, California
-Full Sail University — B.S. Entertainment Business
+Project Matus runs entirely on your own hardware. No cloud. No subscriptions. No data leaving your machine.
 
 ---
 
-## What Matus Is
+## What It Is
 
-Matus is a fine-tuned Llama 3.2 3B model built for K-12 and early college math tutoring.
-It is the backbone of Project Matus — an open-source, locally-run AI tutoring system
-designed for students whose ways of knowing have historically been left out of math education.
+Project Matus is two things:
 
-**Core design principles:**
-- Never gives answers directly — scaffolds student thinking through questions
-- Recognizes valid alternative mathematical frameworks before correcting
-- Protects productive struggle — does not recalibrate downward because a student is frustrated
-- Culturally responsive — code-switching, family methods, and non-Western approaches are assets
-- Neurodivergence-aware — short responses and flat affect are not treated as disengagement
-- No data collection. No cloud. No subscriptions. Runs entirely on local hardware.
+**1. Matus — a custom fine-tuned AI model**
+A Llama 3.2 3B model fine-tuned using LoRA on domain-specific training data. Brian Tushae Thomas is baked into the weights as creator. The model runs locally via llama.cpp with no internet connection required.
+
+**2. A K-12 Math AI Tutor**
+Built on top of Matus as the backbone, the tutor system implements a full pedagogical pipeline: thought-token reasoning, tSEL-grounded affect detection, cross-session student memory, and an epistemically just session logging system designed for culturally responsive math education.
 
 ---
 
-## What It Runs On
+## Architecture
 
-- **Format:** GGUF Q4_K_M quantization
-- **Compatible with:** llama.cpp, Ollama, LM Studio, any GGUF-compatible runtime
-- **Minimum hardware:** 8 GB RAM, any CPU (Intel, AMD, Apple Silicon)
-- **Recommended:** 16 GB RAM for comfortable performance
-- **Latency:** 30–90 seconds per response on CPU-only hardware. Faster on Apple Silicon or GPU.
-
----
-
-## How To Run It
-
-**One command with Ollama:**
-```bash
-ollama run hf.co/TushaeBXN/matus-3b:Q4_K_M
+```
+main.py              — Matus chat interface (single unified model)
+tutor/               — K-12 Math AI Tutor system
+  main.py            — Tutor entry point (simulated student profiles)
+  matus_client.py    — Thought stream + response pipeline
+  memory.py          — Cross-session student memory (ChromaDB / JSON fallback)
+  safety.py          — Cognitive surrender gate + escalation tiers
+  prompts.py         — System prompts and thought stream reasoning template
+  students.py        — 5 simulated student profiles
+  session_log/       — Epistemically just session logger
+start.sh             — Boot Matus (llama.cpp server + chat)
+boot_server.sh       — Boot server only (background, for scripts)
+evaluate_tutor.py    — Evaluation pipeline (15 held-out problems)
+generate_math_dataset.py  — Math tutor training data generator
+finetune_runpod.py   — RunPod fine-tuning script (LoRA + GGUF export)
+trim_dataset.py      — Dataset quality filter
+build_dataset.py     — Merge and format training data
+docs/
+  preliminary_data.md — Proposal-ready evaluation results
 ```
 
-**One command with llama.cpp:**
-```bash
-llama-server -hf TushaeBXN/matus-3b:Q4_K_M
-```
+---
 
-**With the full Project Matus system (auto-downloads model):**
+## Model
+
+The Matus model is a fine-tuned Llama 3.2 3B (Q4_K_M quantization) trained with LoRA on 250 curated examples including:
+- Identity and conversational data
+- K-12 and early college math tutoring scenarios
+- Scaffolding behavior examples across 9 mathematical domains
+
+Training was conducted on an NVIDIA RTX A6000 using Unsloth. The GGUF is not included in this repository — it must be trained using `finetune_runpod.py` or downloaded separately.
+
+---
+
+## Requirements
+
+- **macOS** (Intel or Apple Silicon), Linux, or Windows (WSL2)
+- **Python 3.10+**
+- **llama.cpp** — via Homebrew (`brew install llama.cpp`) or auto-downloaded by `start.sh`
+- ~2 GB free disk space for model weights
+- 8 GB RAM minimum (16 GB recommended)
+
+> ⚠️ **Latency note:** On CPU-only hardware expect 30–90 seconds per response. This is normal — all inference runs locally. Apple Silicon and dedicated GPUs will be significantly faster.
+
+> ⚠️ **Model weights note:** The fine-tuned Matus GGUF (`matus-3b-Q4_K_M.gguf`) is not included in this repository. You have two options:
+> - **Train your own:** Use `finetune_runpod.py` with your own dataset on RunPod (~$0.50, ~15 minutes on an RTX 3090). See the Training Pipeline section below.
+> - **Use the base model:** Download any compatible Llama 3.2 3B Q4_K_M GGUF from HuggingFace, place it in `.models/`, and update `GGUF_PATH` in `start.sh`.
+
+---
+
+## Quickstart
+
 ```bash
 git clone https://github.com/TushaeBXN/project-matus.git
 cd project-matus
 pip install -r requirements.txt
+chmod +x start.sh boot_server.sh
+
+# Place your GGUF in .models/ first — see Model Weights note above
 ./start.sh
 ```
 
-**K-12 Math Tutor (with simulated student profiles):**
+---
+
+## K-12 Math Tutor
+
 ```bash
+# Boot the server first
 ./boot_server.sh
+
+# Run with a simulated student profile
 python3 tutor/main.py --student james --role teacher
+python3 tutor/main.py --student amara --role ta
+python3 tutor/main.py --student devon --role teacher
+
+# Run with a real student
+python3 tutor/main.py --concept "fraction division" --student-id s001 --role teacher
+```
+
+**Simulated student profiles:**
+| Profile | Grade | Concept | Key characteristic |
+|---|---|---|---|
+| Amara | 8 | Linear equations | Geometric/spatial reasoning |
+| Miguel | 6 | Fraction division | Bilingual, family business context |
+| James | 7 | Integers | Math anxiety, withholds to feel safe |
+| Sera | 5 | Multiplication/area | Needs why before how |
+| Devon | 6 | Order of operations | Neurodivergent, short rapid responses |
+
+> All profiles are working drafts requiring community educator review before use in live testing.
+
+---
+
+## Training Pipeline
+
+```bash
+# 1. Boot server
+./boot_server.sh
+
+# 2. Generate training data
+python3 generate_training_data.py
+python3 generate_math_dataset.py --passes 20
+
+# 3. Build and filter dataset
+python3 trim_dataset.py --apply
+python3 build_dataset.py
+
+# 4. Stop server
+./boot_server.sh stop
+
+# 5. Fine-tune on RunPod
+# Upload data/matus_finetune.jsonl and finetune_runpod.py to RunPod
+# Run: python3 finetune_runpod.py
+# Download the output GGUF to .models/matus-3b-Q4_K_M.gguf
 ```
 
 ---
 
-## Training
+## Evaluation
 
-- **Base model:** Llama 3.2 3B Instruct (unsloth/Llama-3.2-3B-Instruct)
-- **Method:** LoRA fine-tuning (r=16, lora_alpha=32)
-- **Dataset:** 250 curated examples — identity data, conversational responses, K-12 and
-  early college math tutoring scenarios across 9 domains
-- **Training hardware:** NVIDIA RTX A6000 (48GB VRAM) via RunPod
-- **Framework:** Unsloth + TRL SFTTrainer
-- **Epochs:** 3
+```bash
+./boot_server.sh
+python3 evaluate_tutor.py
+./boot_server.sh stop
+```
 
----
+**Baseline results (fine-tuned Matus vs. prompt-only baseline):**
 
-## Evaluation Results
-
-Evaluated on 15 held-out math tutoring problems against a prompt-only baseline:
-
-| Metric | Baseline | Matus 3B | Target |
+| Metric | Baseline | Fine-tuned Matus | Target |
 |---|---|---|---|
 | Answer giveaway rate | 0.0% | 0.0% | <5% |
 | Scaffolding quality | 70.0% | 72.7% | >70% |
 | Conceptual accuracy | 23.3% | 32.6% | >70% |
-| Ends with question | 67% | 86% | — |
+| ends_with_question | 67% | 86% | — |
 
-Behavior improvements over baseline: `honor_struggle`, `affirm_partial`,
-`recognize_fallacy`, `counterexample`, `explain_composition` all moved from 0% to 100%.
-
-Full evaluation report:
-[docs/preliminary_data.md](https://github.com/TushaeBXN/project-matus/blob/main/docs/preliminary_data.md)
+Full evaluation report: [`docs/preliminary_data.md`](docs/preliminary_data.md)
 
 ---
 
-## What It Won't Do
+## Model
 
-- **No data collection** — nothing leaves your machine
-- **No cloud dependency** — runs fully offline after download
-- **No answer giveaways** — designed to scaffold, not solve
-- **No biometric input** — affect detection is text-based only
-- **No diagnostic labeling** — student memory stores behavioral observations, never deficit labels
+**Matus 3B — K-12 Math AI Tutor** is publicly available on HuggingFace:
 
----
+```bash
+ollama run hf.co/TushaeBXN/matus-3b:Q4_K_M
+```
 
-## Project
-
-Part of **Project Matus** — an open-source K-12 math tutoring platform with:
-- Thought-token reasoning pipeline (internal reasoning hidden from student)
-- Affect detection (Tier 1/2/3 escalation) grounded in transformative SEL
-- Cross-session student memory (detects students who disengage across multiple sessions)
-- Epistemically just session logging (annotation-ready for researcher review)
-- 5 simulated student profiles for testing and co-design
-
-GitHub: [github.com/TushaeBXN/project-matus](https://github.com/TushaeBXN/project-matus)
+[huggingface.co/TushaeBXN/matus-3b](https://huggingface.co/TushaeBXN/matus-3b)
 
 ---
 
-## License
+## Built By
 
-Apache 2.0 — free to use, modify, and distribute with attribution.
-Base model license: Llama 3.2 Community License (Meta).
+**Brian T. Thomas** in collaboration with **Dr. Raketa Ouedraogo-Thomas**
+Independent ML/AI Developer
+San Diego, California
+Full Sail University — B.S. Entertainment Business
+GitHub: [@TushaeBXN](https://github.com/TushaeBXN)
