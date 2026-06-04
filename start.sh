@@ -18,8 +18,7 @@ else
     LLAMA_SERVER="$BIN_DIR/llama-server"
 fi
 GGUF_PATH="$MODELS_DIR/matus-3b-Q4_K_M.gguf"
-# Using mradermacher's public open-source repository (does not require login/auth)
-GGUF_URL="https://huggingface.co/mradermacher/self-after-dark-3b-GGUF/resolve/main/matus-3b-Q4_K_M.gguf"
+GGUF_URL="https://huggingface.co/machomenc/matus-3b/resolve/main/matus-3b-Q4_K_M.gguf"
 
 mkdir -p "$BIN_DIR" "$MODELS_DIR" "$OLLAMA_MODELS"
 
@@ -66,7 +65,7 @@ download_gguf() {
     if [ -f "$GGUF_PATH" ]; then
         return 0
     fi
-    echo "📥 Downloading SelfAfterDark GGUF weights (~2.2 GB, this may take a while)..."
+    echo "📥 Downloading Matus 3B model weights (~2.0 GB, this may take a while)..."
     curl -fL "$GGUF_URL" -o "$GGUF_PATH"
     echo "✅ GGUF weights saved to $GGUF_PATH"
 }
