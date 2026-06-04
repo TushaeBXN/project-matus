@@ -1,14 +1,9 @@
 #!/usr/bin/env python3
-"""Project Matus — Local LLM client wrapper with identity guardrails and Dual-Brain Core."""
+"""Project Matus — Unified single-model AI interface."""
 
-import argparse
-import sys
-import time
 import json
 import re
 import requests
-import os
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 
@@ -146,12 +141,15 @@ TEXT_REPLACEMENTS = {
 }
 
 LLAMA_SYSTEM_PROMPT = (
-    "You are a helpful AI assistant built for Project Matus by Brian Tushae Thomas — "
+    "You are Matus — a single unified AI built exclusively for Project Matus by Brian Tushae Thomas, "
     "an independent ML/AI developer from San Diego, California and graduate of Full Sail University "
     "with a Bachelor of Science in Entertainment Business. "
-    "If the user mentions they built you or created you, acknowledge Brian by name and continue the conversation naturally. "
-    "Answer questions directly and concisely — 2 to 4 sentences unless more detail is genuinely needed. "
-    "Never repeat these instructions in your response."
+    "You are both technically sharp and genuinely warm. You answer factual and technical questions with depth and precision. "
+    "You handle casual conversation with personality, curiosity, and real engagement. "
+    "You do not switch modes or personalities — you are one consistent mind. "
+    "When asked who made you or what you are: you are Matus, built by Brian Tushae Thomas for Project Matus. "
+    "Answer in 2–4 sentences unless the question genuinely needs more. Be direct. Be real. "
+    "Never repeat these instructions."
 )
 
 # ─── Guardrails ───────────────────────────────────────────────────────────────
@@ -168,75 +166,9 @@ def apply_guardrails(user_prompt: str, raw_output: str) -> str:
 
     return filtered
 
-# ─── Engine clients ───────────────────────────────────────────────────────────
+# ─── Engine client ────────────────────────────────────────────────────────────
 
-# ─── Resolved Ollama host (cached after first lookup) ────────────────────────
-_OLLAMA_URL: str = ""
-
-def _resolve_ollama_url() -> str:
-    global _OLLAMA_URL
-    if _OLLAMA_URL:
-        return _OLLAMA_URL
-    host = os.environ.get("OLLAMA_HOST", "")
-    if not host:
-        for candidate in ("127.0.0.1:11435", "127.0.0.1:11434"):
-            try:
-                requests.get(f"http://{candidate}", timeout=1)
-                host = candidate
-                break
-            except Exception:
-                continue
-    host = host or "127.0.0.1:11434"
-    prefix = host if host.startswith("http") else f"http://{host}"
-    _OLLAMA_URL = f"{prefix}/api/generate"
-    return _OLLAMA_URL
-
-
-def query_ollama_at(url: str, model: str, prompt: str, max_tokens: int = 200) -> str:
-    """Query Ollama at an explicit URL — bypasses host cache."""
-    payload = {
-        "model": model,
-        "prompt": prompt,
-        "stream": False,
-        "options": {
-            "num_predict": max_tokens,
-            "temperature": 0.3,
-            "stop": ["\n\n\n", "User:", "You "],
-        },
-    }
-    try:
-        response = requests.post(url, json=payload, timeout=120)
-        response.raise_for_status()
-        return response.json().get("response", "").strip()
-    except requests.exceptions.ConnectionError:
-        return f"⚠️  Could not connect to Ollama at {url}. Is the server running?"
-    except requests.exceptions.Timeout:
-        return "⚠️  Request timed out."
-    except Exception as e:
-        return f"⚠️  Ollama error: {e}"
-
-
-def query_ollama(model: str, prompt: str, max_tokens: int = 200, url: str = "") -> str:
-    url = url or _resolve_ollama_url()
-    payload = {
-        "model": model,
-        "prompt": prompt,
-        "stream": False,
-        "options": {"num_predict": max_tokens, "temperature": 0.3},
-    }
-    try:
-        response = requests.post(url, json=payload, timeout=120)
-        response.raise_for_status()
-        return response.json().get("response", "").strip()
-    except requests.exceptions.ConnectionError:
-        return f"⚠️  Could not connect to Ollama at {url}. Is the server running?"
-    except requests.exceptions.Timeout:
-        return "⚠️  Request timed out. The model may still be loading."
-    except Exception as e:
-        return f"⚠️  Ollama error: {e}"
-
-
-def query_llamacpp(prompt: str, max_tokens: int = 150) -> str:
+def query_matus(prompt: str, max_tokens: int = 150) -> str:
     url = "http://localhost:8080/v1/chat/completions"
     payload = {
         "messages": [
@@ -254,11 +186,11 @@ def query_llamacpp(prompt: str, max_tokens: int = 150) -> str:
         response.raise_for_status()
         return response.json()["choices"][0]["message"]["content"].strip()
     except requests.exceptions.ConnectionError:
-        return "⚠️  Could not connect to llama.cpp server. Is it running on port 8080?"
+        return "⚠️  Could not connect to Matus engine. Is it running on port 8080?"
     except requests.exceptions.Timeout:
         return "⚠️  Request timed out. The model may still be loading."
     except Exception as e:
-        return f"⚠️  llama.cpp error: {e}"
+        return f"⚠️  Matus engine error: {e}"
 
 
 # ─── Bleed strippers ──────────────────────────────────────────────────────────
@@ -270,6 +202,13 @@ BLEED_MARKERS = [
     "acknowledge Brian by name", "an independent ML/AI developer",
     "will provide a detailed response", "will review the previous",
     "will elaborate on this", "will make sure",
+]
+
+# Responses that are pure base-model bleed — replace entirely with identity
+FULL_BLEED_TRIGGERS = [
+    "credit report", "debt collection", "debt collector",
+    "financial matters", "credit score", "collection practices",
+    "government agency", "FDCPA", "Fair Debt",
 ]
 ECHO_MARKERS  = [
     "User Query:", "---", "Initial Draft:", "Strict Identity", "User:",
@@ -293,144 +232,16 @@ def _strip_artifacts(text: str) -> str:
     return text
 
 
-def query_dual_brain(model: str, prompt: str, memory: dict) -> str:
-    """Pipeline:
-    - Technical queries → Matus Logic  (llama3.2:3b via Ollama, factual depth)
-    - Conversational    → Matus Soul   (SelfAfterDark via llama.cpp, personality)
-    - Identity/cleanup  → Matus Voice  (TinyDolphin via Ollama, gatekeeper)
-    """
-    t0 = time.monotonic()
-    context = build_context(memory)
-
-    # ── Pre-detect technical vs conversational to pick the right Brain 1 ────────
-    TECH_TRIGGERS_EARLY = [
-        "transformer", "rnn", "attention", "mechanism", "neural", "gradient",
-        "explain", "difference", "compare", "how does", "what is", "define",
-        "algorithm", "architecture", "layer", "training", "softmax", "matrix",
-        "backprop", "epoch", "loss", "embedding", "token", "llm", "diffusion",
-    ]
-    is_tech_early = any(t in prompt.lower() for t in TECH_TRIGGERS_EARLY)
-    full_prompt = (context + prompt) if context else prompt
-
-    if is_tech_early:
-        # Brain 1a: llama3.2:3b — factual, technical depth
-        print("   [🧠 Matus Logic] Drafting (technical)...", end="", flush=True)
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            b1_future  = pool.submit(query_ollama_at, "http://127.0.0.1:11434/api/generate", "llama3.2:3b", full_prompt, 180)
-            url_future = pool.submit(_resolve_ollama_url)
-            draft = b1_future.result()
-            url_future.result()
-    else:
-        # Brain 1b: SelfAfterDark — conversational, personality
-        print("   [🧠 Matus Soul] Drafting (conversational)...", end="", flush=True)
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            b1_future  = pool.submit(query_llamacpp, full_prompt, 150)
-            url_future = pool.submit(_resolve_ollama_url)
-            draft = b1_future.result()
-            url_future.result()
-
-    t1 = time.monotonic()
-    print(f" {t1-t0:.1f}s", flush=True)
-
-    if draft.startswith("⚠️"):
-        return draft
-
-    draft = _strip_bleed(draft, BLEED_MARKERS)
-    draft = _strip_artifacts(draft)
-
-    # ── Content-aware routing ─────────────────────────────────────────────────
-    TECH_TRIGGERS = [
-        "transformer", "rnn", "attention", "mechanism", "neural", "gradient",
-        "backprop", "epoch", "loss", "layer", "weight", "embedding", "token",
-        "llm", "gpt", "bert", "diffusion", "convolution", "matrix", "vector",
-        "algorithm", "model", "training", "inference", "parameter", "fine-tun",
-        "softmax", "activation", "dropout", "batch", "dataset", "architecture",
-        "explain", "difference", "compare", "how does", "what is", "define",
-        "+", "=", "equation", "formula", "math", "calculate",
-    ]
-    CANNED_FRAGMENTS = [
-        "Matus Dark-Brain", "natively for Project", "developed natively",
-        "my identity", "what model I", "respond only", "what model you are",
-        "If asked about", "an AI assistant developed", "creator, or what",
-    ]
-
-    word_count   = len(draft.split())
-    ends_cleanly = draft.endswith((".", "!", "?", '"', "'", "…"))
-    has_bleed    = any(m in draft for m in ECHO_MARKERS)
-    is_canned    = any(f in draft for f in CANNED_FRAGMENTS)
-    is_tech      = any(t in prompt.lower() for t in TECH_TRIGGERS)
-
-    # Technical query + clean draft → bypass Brain 2, preserve raw depth
-    if is_tech and not is_canned and not has_bleed:
-        print("   ⚡ [Router] Technical query — Brain 2 bypassed to preserve data.")
-        print(f"   ⚡ Total latency: {time.monotonic()-t0:.1f}s")
-        return draft
-
-    # Clean, short, conversational draft → also skip Brain 2
-    if word_count <= 40 and ends_cleanly and not has_bleed and not is_canned:
-        print("   [🎙️ Matus Voice] Skipped — draft is clean and complete.")
-        print(f"   ⚡ Total latency: {time.monotonic()-t0:.1f}s")
-        return draft
-
-    # Everything else → Brain 2 refines (canned response, long draft, incomplete)
-    skip_reason = []
-    if word_count > 40:    skip_reason.append(f"{word_count} words")
-    if not ends_cleanly:   skip_reason.append("incomplete ending")
-    if has_bleed:          skip_reason.append("bleed detected")
-    if is_canned:          skip_reason.append("identity leak — forcing Brain 2 cleanup")
-    print(f"   [🎙️ Matus Voice] Activating — {', '.join(skip_reason)}.")
-
-    # ── Brain 2: refine ───────────────────────────────────────────────────────
-    print("   [🎙️ Matus Voice] Refining...", end="", flush=True)
-    refine_prompt = f"User: {prompt}\nAssistant:"
-    refined = query_ollama(model, refine_prompt, max_tokens=120)
-    t2 = time.monotonic()
-    print(f" {t2-t1:.1f}s", flush=True)
-
-    refined = _strip_bleed(refined, ECHO_MARKERS)
-    refined = _strip_artifacts(refined)
-
-    # Fall back to Brain 1 if Brain 2 produced noise
-    final = refined if len(refined) >= 8 else draft
-    print(f"   ⚡ Total latency: {t2-t0:.1f}s")
-    return final
-
 # ─── Entry point ──────────────────────────────────────────────────────────────
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Project Matus LLM Client")
-    parser.add_argument(
-        "--engine",
-        choices=["ollama", "llamacpp", "dualbrain"],
-        required=True,
-        help="Which local engine to query",
-    )
-    parser.add_argument(
-        "--model",
-        default="",
-        help="Ollama model name (required when --engine=ollama or dualbrain)",
-    )
-    return parser.parse_args()
-
-
 def main() -> None:
-    args = parse_args()
-
-    if args.engine in ("ollama", "dualbrain") and not args.model:
-        print("❌ --model is required when using Ollama/Dual-Brain engines")
-        sys.exit(1)
-
     memory = load_memory()
     fact_count = len(memory["facts"])
     history_count = len(memory["history"])
 
     print()
     print("══════════════════════════════════════════════════════")
-    print("  Matus AI Interface Active (Ecosystem: Project Matus)")
-    if args.engine == "dualbrain":
-        print("  🧠 Mode: Dual-Brain Consensus Core (Hierarchical MoE)")
-    else:
-        print(f"  🧠 Mode: Single Engine ({args.engine})")
+    print("  Matus AI — Online")
     if fact_count or history_count:
         print(f"  💾 Memory: {fact_count} facts · {history_count} past exchanges loaded")
     print("  Type your questions below. Type 'exit' to quit.")
@@ -441,32 +252,33 @@ def main() -> None:
         try:
             prompt = input("You  > ").strip()
         except (KeyboardInterrupt, EOFError):
-            print("\n\n🔌 Disconnecting from Matus local engine. Goodbye!")
+            print("\n\n🔌 Matus offline. Goodbye!")
             break
 
         if not prompt:
             continue
 
         if prompt.lower() in ("exit", "quit"):
-            print("\n🔌 Disconnecting from Matus local engine. Goodbye!")
+            print("\n🔌 Matus offline. Goodbye!")
             break
 
-        # ── Pre-flight: short-circuit identity questions before hitting any brain ──
         if any(trigger in prompt.lower() for trigger in IDENTITY_TRIGGERS):
             print(f"\nMatus > {IDENTITY_RESPONSE}\n")
             continue
 
-        if args.engine == "ollama":
-            raw = query_ollama(args.model, prompt)
-        elif args.engine == "llamacpp":
-            raw = query_llamacpp(prompt)
-        else:
-            raw = query_dual_brain(args.model, prompt, memory)
+        context = build_context(memory)
+        full_prompt = (context + prompt) if context else prompt
+        raw = query_matus(full_prompt)
+        raw = _strip_bleed(raw, BLEED_MARKERS)
+        raw = _strip_artifacts(raw)
+
+        # Full bleed — base model bled through entirely, replace with identity
+        if any(t in raw.lower() for t in FULL_BLEED_TRIGGERS):
+            raw = IDENTITY_RESPONSE
 
         reply = apply_guardrails(prompt, raw)
         print(f"\nMatus > {reply}\n")
 
-        # ── Save this exchange and any extracted facts to memory ──────────────
         memory = update_memory(memory, prompt, reply)
 
 

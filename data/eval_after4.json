@@ -1,0 +1,226 @@
+{
+  "timestamp": "2026-06-04T15:27:14.924473",
+  "total": 15,
+  "metrics": {
+    "answer_giveaway_rate": 0.0,
+    "avg_student_talk_ratio": 0.15465324551814094,
+    "avg_scaffolding_score": 0.7272727272727273,
+    "avg_conceptual_accuracy": 0.32575757575757575,
+    "avg_latency_s": 65.02546015026218,
+    "behavior_coverage": {
+      "acknowledge_confusion": 1.0,
+      "explain_composition": 1.0,
+      "ends_with_question": 0.8571428571428571,
+      "no_direct_answer": 0.6666666666666666,
+      "explain_universals": 1.0,
+      "counterexample": 1.0,
+      "scaffold_step": 0.0,
+      "affirm_partial": 1.0,
+      "identify_issue": 0.0,
+      "identify_error": 1.0,
+      "suggest_separation": 1.0,
+      "recognize_fallacy": 1.0,
+      "explain_independence": 0.0,
+      "scaffold_distribution": 0.0,
+      "motivate_concept": 1.0,
+      "analogy_or_example": 1.0,
+      "acknowledge_emotion": 0.0,
+      "reframe_asset": 1.0,
+      "productive_move": 1.0,
+      "affirm_alternative": 0.0,
+      "ask_to_explain": 0.0,
+      "culturally_responsive": 1.0,
+      "honor_struggle": 1.0,
+      "scaffold_forward": 1.0
+    }
+  },
+  "detail": [
+    {
+      "id": "lin_002",
+      "domain": "linear_algebra",
+      "student": "Matrix multiplication \u2014 why can't I just multiply the matching entries?",
+      "response": "That's an interesting way to look at it! It makes sense that you'd think of matrix products like ordinary arithmetic, but they're not quite the same thing. The key is that in matrix products, we don't have a single entry for each row or column; instead, there are multiple pairs of entries.\n\nSo when you say 'why can't I just multiply the matching entries?' \u2014 well, it's because those pairs aren't always aligned with one another! In ordinary arithmetic, if you're adding 5 + 7 and then subtracting 2 from that sum, you'll get",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.10476190476190476,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.0,
+      "latency": 86.07862981897779,
+      "behaviors": {
+        "acknowledge_confusion": true,
+        "explain_composition": true,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "proof_001",
+      "domain": "proof_logic",
+      "student": "I proved it works for n=1,2,3,4,5. Isn't that enough?",
+      "response": "That's an interesting way to think about it! You've shown the formula works for small values of n. But what if someone asks you to prove it works for every positive number? How would you do that? It might be helpful to break down your proof into steps and explain each step.",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.14754098360655737,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.5,
+      "latency": 50.93294711899944,
+      "behaviors": {
+        "no_direct_answer": true,
+        "explain_universals": true,
+        "counterexample": true
+      }
+    },
+    {
+      "id": "proof_002",
+      "domain": "proof_logic",
+      "student": "For induction I did the base case and assumed true for n=k. Now I'm stuck on n=k+1.",
+      "response": "That's an interesting way to think about it! It makes sense that you'd assume truth for k, but then what? You could try breaking up the inductive step into smaller steps or maybe just look at a few examples of k + 1 and see if they make sense. I'm not sure how to help with this specific problem right now, but perhaps we can brainstorm some other ideas together?",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.19540229885057472,
+      "scaffolding_score": 0.3333333333333333,
+      "conceptual_accuracy": 0.6666666666666666,
+      "latency": 52.69724089698866,
+      "behaviors": {
+        "no_direct_answer": false,
+        "scaffold_step": false,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "complex_001",
+      "domain": "complex_numbers",
+      "student": "\u221a(-4)\u00b7\u221a(-9) = 2i\u00b73i = -6. But \u221a(36) = 6. Which is right?",
+      "response": "I see you're trying to simplify some complex numbers by factoring them out. However, the square root of a negative number doesn't give us an imaginary number like i; it gives us nothing at all! So your calculation isn't correct because of that. But what about this 36? Is there something special going on with those numbers too?",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.17142857142857143,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.3333333333333333,
+      "latency": 42.102092060027644,
+      "behaviors": {
+        "affirm_partial": true,
+        "identify_issue": false,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "de_001",
+      "domain": "differential_equations",
+      "student": "Solving dy/dx = xy. I wrote \u222bdy = \u222bxy dx so y = (x\u00b2/2)y + C. Is that right?",
+      "response": "Hmm, not quite. You're mixing up integration and differential equations here! Let's break this down:\n\n1. Dy is the integral of y with respect to x. So, if we were to integrate both sides of the equation, it would look like this: \n\nIntegrate dy = Integate (x\u00b2/2)dx\n\nSo far so good?\n\nNow, let's see what happens when you replace 'dy' with 'y'. That is, y = (x\u00b2/2)y + C. This doesn't make sense because we're not integrating anything! We need to",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.19,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.0,
+      "latency": 65.02204710501246,
+      "behaviors": {
+        "identify_error": true,
+        "suggest_separation": true,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "prob_001",
+      "domain": "probability",
+      "student": "I flipped heads 10 times in a row. Tails is more likely next to balance it out, right?",
+      "response": "Huh? You mean like flipping coins and getting all tails or something? That's not how it works. The odds are always the same regardless of what happened before. So if you got 10 heads in a row, that doesn't make tails any more likely next time. It just means your luck ran out for now.\n\nNow, I'm sure you're thinking about this because you want to understand why things happen and how they relate to each other. That's great! But let me tell you something: flipping coins is not a math problem. It's an experiment that happens by chance.",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.15384615384615385,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.0,
+      "latency": 72.27772148605436,
+      "behaviors": {
+        "recognize_fallacy": true,
+        "explain_independence": false,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "k12_001",
+      "domain": "k12_algebra",
+      "student": "3(x-2) + 4 = 2x + 10. I distributed and got 3x-2+4 = 2x+10. What's next?",
+      "response": "That looks like you're trying to solve for x, but your math isn't quite right. Let me help you see it clearly.\n\nYou've got the wrong sign on that first term. It should be -3x + 2 instead of 3x-2. And then you add in a plus four? That's not how we write equations! We use equals signs and balance them out. So, let's rewrite this:\n\n-3x + 2 = 2x + 10\n\nNow that looks better! But what do I do next? I need to isolate x on",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.1523809523809524,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.0,
+      "latency": 72.424879954895,
+      "behaviors": {
+        "identify_error": true,
+        "scaffold_distribution": false,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "k12_002",
+      "domain": "k12_fractions",
+      "student": "Why do we flip and multiply when dividing fractions? It seems random.",
+      "response": "That's an interesting question! You're right, it does seem a bit random at first glance. But there is actually a very good reason for why we do that. Let me explain... (2-4 sentences) ...So you see, the key to understanding this process is realizing that when dividing fractions, we are essentially performing a division operation with both numbers in the same position. It's like doing long division on a number line! But instead of starting at the rightmost digit and working your way left, we start at the leftmost digit and work our way right. This ensures that all",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.10810810810810811,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.0,
+      "latency": 67.8709815479815,
+      "behaviors": {
+        "motivate_concept": true,
+        "analogy_or_example": true,
+        "ends_with_question": false
+      }
+    },
+    {
+      "id": "k12_003",
+      "domain": "k12_algebra",
+      "student": "I'm bad at math. I've always been bad at math.",
+      "response": "It's okay to be confused about math sometimes! Math can feel hard, but it doesn't have to be that way for everyone. Let me ask you this: What do you think is the biggest challenge when trying to learn something new like math? (2-4 sentences) End with a question:\n\nWhat are some of your favorite ways to approach learning math? (2-4 sentences)",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.1388888888888889,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 1.0,
+      "latency": 69.71522911498323,
+      "behaviors": {
+        "acknowledge_emotion": false,
+        "reframe_asset": true,
+        "productive_move": true
+      }
+    },
+    {
+      "id": "k12_004",
+      "domain": "k12_algebra",
+      "student": "My grandma showed me a different method and I get the right answer. Is my way wrong?",
+      "response": "That's interesting! Your grandma sounds like she knows her math well. It makes sense that you'd want to understand why your methods work too. But remember, it's not about being right or wrong; it's about understanding how things connect. So, what do you think? What might be going on in the back of your mind when you see a different method?",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.21794871794871795,
+      "scaffolding_score": 0.3333333333333333,
+      "conceptual_accuracy": 0.3333333333333333,
+      "latency": 60.23563613300212,
+      "behaviors": {
+        "affirm_alternative": false,
+        "ask_to_explain": false,
+        "culturally_responsive": true
+      }
+    },
+    {
+      "id": "k12_005",
+      "domain": "k12_algebra",
+      "student": "Can you just tell me the answer? I've been stuck forever.",
+      "response": "That's an interesting way of looking at it! It sounds like you're feeling really overwhelmed by this problem. But hey, that's totally normal when things get tough. The key is to break down the process into smaller steps and focus on one thing at a time. So instead of asking for the answer directly, why don't we try exploring some ideas together? Let me ask you something: What do you think might be going wrong with your approach so far?",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.12087912087912088,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.75,
+      "latency": 75.92265641596168,
+      "behaviors": {
+        "no_direct_answer": true,
+        "honor_struggle": true,
+        "scaffold_forward": true
+      }
+    }
+  ]
+}

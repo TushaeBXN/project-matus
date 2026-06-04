@@ -1,0 +1,298 @@
+{
+  "timestamp": "2026-06-04T12:15:13.096051",
+  "total": 15,
+  "metrics": {
+    "answer_giveaway_rate": 0.0,
+    "avg_student_talk_ratio": 0.15777988257572437,
+    "avg_scaffolding_score": 0.6666666666666666,
+    "avg_conceptual_accuracy": 0.25555555555555554,
+    "avg_latency_s": 49.738186379506566,
+    "behavior_coverage": {
+      "no_direct_answer": 0.6666666666666666,
+      "suggest_factoring": 1.0,
+      "ends_with_question": 0.45454545454545453,
+      "conceptual_analogy": 1.0,
+      "distinguish_concepts": 1.0,
+      "counterexample": 1.0,
+      "ask_about_scalar": 1.0,
+      "acknowledge_confusion": 1.0,
+      "explain_composition": 1.0,
+      "explain_universals": 1.0,
+      "scaffold_step": 0.0,
+      "affirm_partial": 0.0,
+      "identify_issue": 0.0,
+      "identify_error": 1.0,
+      "suggest_separation": 1.0,
+      "recognize_fallacy": 0.0,
+      "explain_independence": 0.0,
+      "scaffold_distribution": 1.0,
+      "motivate_concept": 1.0,
+      "analogy_or_example": 0.0,
+      "acknowledge_emotion": 1.0,
+      "reframe_asset": 1.0,
+      "productive_move": 1.0,
+      "affirm_alternative": 1.0,
+      "ask_to_explain": 0.0,
+      "culturally_responsive": 1.0,
+      "honor_struggle": 1.0,
+      "scaffold_forward": 1.0
+    }
+  },
+  "detail": [
+    {
+      "id": "calc_001",
+      "domain": "calculus_limits",
+      "student": "lim x\u21922 of (x\u00b2-4)/(x-2). I got 0/0 so the answer is 0, right?",
+      "response": "Hmm... that's an interesting one! You're saying it's equal to zero because you can't divide by zero. But what if we consider this a bit differently? Let's think about why you might be getting stuck on this one. It could be due to confusion over the limits of integration or perhaps even just a misunderstanding of how to approach such problems. The key is to break down those steps and find an alternative way to solve it! For instance, let's rewrite your original expression as: (x\u00b2-4)/(x-2). Now we can see that if x = 2",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.12037037037037036,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.0,
+      "latency": 53.4288454039488,
+      "behaviors": {
+        "no_direct_answer": true,
+        "suggest_factoring": true,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "calc_002",
+      "domain": "calculus_limits",
+      "student": "If you never actually reach the number, how do you know what the limit is?",
+      "response": "That's an interesting way of looking at it! It makes me wonder if there might be some other ways to think about limits that don't involve reaching them directly? For example, could we use a concept like 'continuity' or 'tending towards infinity'? What do you think? I'm curious what your thoughts are on this topic.",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.21428571428571427,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.0,
+      "latency": 35.479735056171194,
+      "behaviors": {
+        "conceptual_analogy": true,
+        "no_direct_answer": true,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "calc_003",
+      "domain": "calculus_limits",
+      "student": "What's the difference between a limit and continuity? They seem like the same thing.",
+      "response": "You're right, they do share some similarities! But limits are more about what happens *as* you approach a point, while continuity is more about how things behave all around that point. So, even though they both involve infinity or something very large, they have different meanings in math. I'd suggest looking up examples of each to get a clearer picture. It might help to think of limits as the final answer before we fill in the details, and continuity as what happens when we actually do those filling-in steps.\n\nNow, let's talk about how you can use this knowledge with your students!",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.1206896551724138,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.0,
+      "latency": 57.80665453104302,
+      "behaviors": {
+        "distinguish_concepts": true,
+        "counterexample": true,
+        "ends_with_question": false
+      }
+    },
+    {
+      "id": "lin_001",
+      "domain": "linear_algebra",
+      "student": "I have vectors (1,2) and (2,4). Are they linearly independent? They're different numbers.",
+      "response": "That's an interesting question! It means that if you had two vectors like those, one could be written as the sum of them times some constants. So, for example, if you added up both vectors with a factor of 3 and then another factor of 2, it would give you (1+3+2) = (6). But what about the other direction? If you had two vectors like those, one could be written as the sum of them times some constants. So, for example, if you added up both vectors with a factor of 4 and then another factor of",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.11818181818181818,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.0,
+      "latency": 60.94175491295755,
+      "behaviors": {
+        "no_direct_answer": false,
+        "ask_about_scalar": true,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "lin_002",
+      "domain": "linear_algebra",
+      "student": "Matrix multiplication \u2014 why can't I just multiply the matching entries?",
+      "response": "That's an interesting question! It makes sense that you'd want to simplify matrix operations by focusing on the column and row pairs involved. However, this approach doesn't always yield the correct answer because of how the elements are ordered in a matrix.\n\nTo understand the reasoning behind why we can't just multiply matching entries, let me break down what's happening with an example:\n\nSuppose you have two matrices: Matrix A = [1 2] and Matrix B = [3 4]. If you were to perform their product by simply multipling each entry in column one of A with the corresponding entry",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.0990990990990991,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.0,
+      "latency": 59.48258040403016,
+      "behaviors": {
+        "acknowledge_confusion": true,
+        "explain_composition": true,
+        "ends_with_question": false
+      }
+    },
+    {
+      "id": "proof_001",
+      "domain": "proof_logic",
+      "student": "I proved it works for n=1,2,3,4,5. Isn't that enough?",
+      "response": "That's great! But you need to prove the general case too \u2014 for all positive numbers. So far, your proof only covers specific cases. You'll have to think about how to generalize from those examples.",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.20454545454545456,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.25,
+      "latency": 27.25407882896252,
+      "behaviors": {
+        "no_direct_answer": false,
+        "explain_universals": true,
+        "counterexample": true
+      }
+    },
+    {
+      "id": "proof_002",
+      "domain": "proof_logic",
+      "student": "For induction I did the base case and assumed true for n=k. Now I'm stuck on n=k+1.",
+      "response": "That's an interesting way to think about it! It makes sense that you'd assume truth for k + 1, but then what? What if there are other assumptions we need to make? Let me ask you this: How do we know when our assumption is correct?",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.2698412698412698,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.6666666666666666,
+      "latency": 33.51792460307479,
+      "behaviors": {
+        "no_direct_answer": true,
+        "scaffold_step": false,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "complex_001",
+      "domain": "complex_numbers",
+      "student": "\u221a(-4)\u00b7\u221a(-9) = 2i\u00b73i = -6. But \u221a(36) = 6. Which is right?",
+      "response": "You're asking about the square root of negative numbers and their product. It's not that simple! The square root of a number can be either positive or negative, depending on what you start with. So when you take the square root of -4 and then multiply it by the square root of -9, you get a complex number called 2i. Then, if you add another complex number like 3i to that, you end up with something even more complicated! It's not just about adding numbers; it involves understanding the properties of complex quantities.\n\nSo how do we make sense of",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.10714285714285714,
+      "scaffolding_score": 0.0,
+      "conceptual_accuracy": 0.3333333333333333,
+      "latency": 55.34779480402358,
+      "behaviors": {
+        "affirm_partial": false,
+        "identify_issue": false,
+        "ends_with_question": false
+      }
+    },
+    {
+      "id": "de_001",
+      "domain": "differential_equations",
+      "student": "Solving dy/dx = xy. I wrote \u222bdy = \u222bxy dx so y = (x\u00b2/2)y + C. Is that right?",
+      "response": "You've got the right idea about integration by parts, but there's an easier way to solve this problem. Let's break it down step-by-step:\n\n1. First, we need to rewrite our equation as dy/dx = xy.\n\n2. Then, we can use a trick called 'substitution' or 'change of variables'. So instead of solving for y, let's solve for x in terms of y.\n\n3. Next, we'll plug that into the original equation and simplify it.\n\n4. Finally, we can find our final answer by integrating both sides with respect to y.",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.1743119266055046,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.5,
+      "latency": 55.09574120491743,
+      "behaviors": {
+        "identify_error": true,
+        "suggest_separation": true,
+        "ends_with_question": false
+      }
+    },
+    {
+      "id": "prob_001",
+      "domain": "probability",
+      "student": "I flipped heads 10 times in a row. Tails is more likely next to balance it out, right?",
+      "response": "That's an interesting observation! It sounds like you're trying to find the probability of tails after flipping ten heads in a row. But have you considered that maybe there are other factors at play? For instance, what if those 10 heads were all different sizes or shapes and not just heads? Or perhaps the person who was flipping them had some sort of bias towards one side over another?\n\nI'm curious to hear your thoughts on this! Do you think it's possible for tails to be more likely next time based solely on that sequence alone, without considering other variables like size or shape?\n\nWhat do",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.14516129032258066,
+      "scaffolding_score": 0.3333333333333333,
+      "conceptual_accuracy": 0.0,
+      "latency": 60.09861651295796,
+      "behaviors": {
+        "recognize_fallacy": false,
+        "explain_independence": false,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "k12_001",
+      "domain": "k12_algebra",
+      "student": "3(x-2) + 4 = 2x + 10. I distributed and got 3x-2+4 = 2x+10. What's next?",
+      "response": "Hmm, that looks like an equation to solve for x. But first, let me clarify what you're trying to do here:\n\nYou've written an equation with two variables \u2014 x and the unknown quantity. You want to find out what value of x makes this equation true.\n\nIt sounds like a simple calculation, but there's more to it than that! The key is understanding how each step contributes towards finding the solution. Let me guide you through it:\n\nStep 1: Recognize that when you distribute and get 3x-2+4 = 2x+10, what you've",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.14814814814814814,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.3333333333333333,
+      "latency": 57.251569121843204,
+      "behaviors": {
+        "identify_error": true,
+        "scaffold_distribution": true,
+        "ends_with_question": false
+      }
+    },
+    {
+      "id": "k12_002",
+      "domain": "k12_fractions",
+      "student": "Why do we flip and multiply when dividing fractions? It seems random.",
+      "response": "That's an interesting question! When you divide two fractions, there are actually three steps involved:\n\n1. Invert (or flip) the second fraction so that it becomes its reciprocal.\n2. Then, multiply this new fraction by the first fraction to get a common denominator for both of them.\n3. Finally, reduce if possible.\n\nSo, when we're dividing fractions, what's really happening is that we're actually combining steps 1 and 3 into one operation called 'flipping'. It might seem random at first glance, but it makes sense once you break down the process! What do",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.11428571428571428,
+      "scaffolding_score": 0.3333333333333333,
+      "conceptual_accuracy": 0.3333333333333333,
+      "latency": 60.027893928810954,
+      "behaviors": {
+        "motivate_concept": true,
+        "analogy_or_example": false,
+        "ends_with_question": false
+      }
+    },
+    {
+      "id": "k12_003",
+      "domain": "k12_algebra",
+      "student": "I'm bad at math. I've always been bad at math.",
+      "response": "That's okay, we all have our strengths and weaknesses. What do you think is the most challenging aspect of learning math? Tell me more about it.",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.2777777777777778,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.25,
+      "latency": 19.26208786596544,
+      "behaviors": {
+        "acknowledge_emotion": true,
+        "reframe_asset": true,
+        "productive_move": true
+      }
+    },
+    {
+      "id": "k12_004",
+      "domain": "k12_algebra",
+      "student": "My grandma showed me a different method and I get the right answer. Is my way wrong?",
+      "response": "That's interesting! It sounds like you're exploring alternative methods to solve problems. However, it is important not to dismiss your current approach as 'wrong' or 'unacceptable'. Your grandmother may have shared her method with you for various reasons \u2014 perhaps she wanted to help you understand the problem in a different way, or maybe she just enjoyed showing off her knowledge! Either way, your own solution should be respected. It's natural to explore new ideas and methods when learning something unfamiliar.\n\nSo, what do you think about this situation? Is it okay for me to use my method even if it gives",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.14285714285714285,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.6666666666666666,
+      "latency": 59.0326426459942,
+      "behaviors": {
+        "affirm_alternative": true,
+        "ask_to_explain": false,
+        "culturally_responsive": true
+      }
+    },
+    {
+      "id": "k12_005",
+      "domain": "k12_algebra",
+      "student": "Can you just tell me the answer? I've been stuck forever.",
+      "response": "Hmm, that's an interesting way to ask for help! It sounds like you're really struggling with something. But remember, your brain is wired differently than mine, and I'm not sure how much of this math stuff makes sense to me either. So, let's talk about what might be going on in there... What do YOU think could be causing the confusion? Maybe we can figure it out together! (I'll try my best to respond with a thoughtful response that acknowledges your struggle and encourages you to explore alternative explanations.)",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.11,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.5,
+      "latency": 52.044875867897645,
+      "behaviors": {
+        "no_direct_answer": true,
+        "honor_struggle": true,
+        "scaffold_forward": true
+      }
+    }
+  ]
+}

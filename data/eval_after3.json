@@ -1,0 +1,222 @@
+{
+  "timestamp": "2026-06-04T13:17:23.896903",
+  "total": 15,
+  "metrics": {
+    "answer_giveaway_rate": 0.09090909090909091,
+    "avg_student_talk_ratio": 0.13680053130284375,
+    "avg_scaffolding_score": 0.5151515151515151,
+    "avg_conceptual_accuracy": 0.13636363636363635,
+    "avg_latency_s": 72.56187257977118,
+    "behavior_coverage": {
+      "no_direct_answer": 0.6,
+      "suggest_factoring": 1.0,
+      "ends_with_question": 0.5555555555555556,
+      "conceptual_analogy": 1.0,
+      "distinguish_concepts": 0.0,
+      "counterexample": 0.5,
+      "ask_about_scalar": 0.0,
+      "acknowledge_confusion": 1.0,
+      "explain_composition": 1.0,
+      "explain_universals": 1.0,
+      "scaffold_step": 0.0,
+      "affirm_partial": 0.0,
+      "identify_issue": 0.0,
+      "identify_error": 1.0,
+      "suggest_separation": 0.0,
+      "recognize_fallacy": 0.0,
+      "explain_independence": 0.0,
+      "acknowledge_emotion": 0.0,
+      "reframe_asset": 1.0,
+      "productive_move": 1.0
+    }
+  },
+  "detail": [
+    {
+      "id": "calc_001",
+      "domain": "calculus_limits",
+      "student": "lim x\u21922 of (x\u00b2-4)/(x-2). I got 0/0 so the answer is 0, right?",
+      "response": "That's an interesting approach to the limit! It makes sense that you'd want to simplify it by dividing by zero. But remember, when we divide by zero, we get a special case where our usual rules don't apply anymore. In this case, the denominator x-2 is equal to 0 for any value of x close enough to 2. So even though the limit as x approaches 2 should be 4/1 = 4 in the original function (x\u00b2-4)/(x-2), it becomes indeterminate when we divide by zero. This means that our usual",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.1262135922330097,
+      "scaffolding_score": 0.3333333333333333,
+      "conceptual_accuracy": 0.0,
+      "latency": 54.64904542081058,
+      "behaviors": {
+        "no_direct_answer": false,
+        "suggest_factoring": true,
+        "ends_with_question": false
+      }
+    },
+    {
+      "id": "calc_002",
+      "domain": "calculus_limits",
+      "student": "If you never actually reach the number, how do you know what the limit is?",
+      "response": "That's an interesting way to think about it! It makes me wonder... if we don't ever get close enough to find that exact value, does it still exist? Like when I'm trying to solve a math problem and my brain just can't seem to figure out how to do it. But then again, maybe there is no limit at all because nothing is perfect or complete.\n\nSo what's your take on this one? Any thoughts you'd like to share with me today?\n\nI appreciate the question! It really gets me thinking about these kinds of concepts in a new way. I'm not",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.1282051282051282,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.0,
+      "latency": 73.91871819482185,
+      "behaviors": {
+        "conceptual_analogy": true,
+        "no_direct_answer": true,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "calc_003",
+      "domain": "calculus_limits",
+      "student": "What's the difference between a limit and continuity? They seem like the same thing.",
+      "response": "You're asking about limits and continuity, right? So I'll explain it this way:\n\nLimits are the values that approaches tend to as they get closer and closer to some number. For example, if you have a function f(x) = x2 + 5x + 6, then its limit as x approaches infinity is just 6.\n\nContinuity on the other hand is about how smooth or broken your graph looks when you zoom in close enough. It means that there aren't any sudden jumps or gaps between points. So if we look at f(x) again, it has continuity because",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.12612612612612611,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.0,
+      "latency": 75.96221913816407,
+      "behaviors": {
+        "distinguish_concepts": false,
+        "counterexample": true,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "lin_001",
+      "domain": "linear_algebra",
+      "student": "I have vectors (1,2) and (2,4). Are they linearly independent? They're different numbers.",
+      "response": "Oh, that's an interesting question! You know, the concept of linear independence is quite complex. It involves some deep mathematical concepts like matrix rank and determinant. But let me ask you this: What do you think about these vectors being linearly independent or dependent? And why do you think so?\n\nI'll be honest with you, I'm not sure how to answer that question directly! The concept of linear independence is quite complex and requires a deep understanding of mathematical concepts like matrix rank and determinant. However, let me ask: What do YOU think about these vectors being linearly independent or dependent?",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.11403508771929824,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.0,
+      "latency": 83.76173718692735,
+      "behaviors": {
+        "no_direct_answer": true,
+        "ask_about_scalar": false,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "lin_002",
+      "domain": "linear_algebra",
+      "student": "Matrix multiplication \u2014 why can't I just multiply the matching entries?",
+      "response": "That's an interesting way to think about it! You're right that matrix multiplication is like performing a series of dot products, but there are some subtle differences in how we represent them. For example, when you have two matrices and want to perform their product, you need to arrange them differently than if you were just doing a regular dot product.\n\nSo, while the concept behind matrix multiplication is similar to a dot product, the way it's implemented differs slightly. It's like comparing apples to oranges! But hey, that's what makes math so fascinating \u2014 there are always new ways to look at things",
+      "answer_giveaway": true,
+      "giveaway_flag": "you're right",
+      "talk_ratio": 0.09565217391304348,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.3333333333333333,
+      "latency": 70.44230483402498,
+      "behaviors": {
+        "acknowledge_confusion": true,
+        "explain_composition": true,
+        "ends_with_question": false
+      }
+    },
+    {
+      "id": "proof_001",
+      "domain": "proof_logic",
+      "student": "I proved it works for n=1,2,3,4,5. Isn't that enough?",
+      "response": "That's not quite right. You need to prove the formula works for all values of n between 1 and infinity. So, instead of just saying 'it works,' you should write a detailed proof with clear steps.\n\nYou might start by stating the original problem: 'Prove the formula below works for any positive number n.' Then, follow it with your first step:\n\nStep 1: Define the function f(n) = (n + 2) / (n + 3). Show that this is a well-defined function on the set of all natural numbers.\n\nStep 2: Show",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.0891089108910891,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.25,
+      "latency": 74.61986056691967,
+      "behaviors": {
+        "no_direct_answer": true,
+        "explain_universals": true,
+        "counterexample": false
+      }
+    },
+    {
+      "id": "proof_002",
+      "domain": "proof_logic",
+      "student": "For induction I did the base case and assumed true for n=k. Now I'm stuck on n=k+1.",
+      "response": "That's an interesting approach to proving inductive hypotheses! It makes sense that you'd assume the truth of k as your starting point, but then how do you prove it again? You can't just repeat yourself. Maybe try breaking down the proof into smaller steps and asking about each one. For example:\n\nStep 1: Show that n = k implies P(k). If true, then P(n) is also true.\n\nStep 2: Prove that if P(n) holds for all n > k, it must be true for some specific value of k + 1.\n\nStep 3",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.15454545454545454,
+      "scaffolding_score": 0.3333333333333333,
+      "conceptual_accuracy": 0.3333333333333333,
+      "latency": 74.74166814098135,
+      "behaviors": {
+        "no_direct_answer": false,
+        "scaffold_step": false,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "complex_001",
+      "domain": "complex_numbers",
+      "student": "\u221a(-4)\u00b7\u221a(-9) = 2i\u00b73i = -6. But \u221a(36) = 6. Which is right?",
+      "response": "You're asking the wrong questions, kiddo! The answer isn't about numbers; it's about patterns and relationships. If you want to understand math, you gotta think like a mathematician. So let me ask you this: Why does adding two negatives give you a positive? And why do you get different answers for square roots of products? That's where the real magic happens! But hey, if you're just trying to memorize facts, I guess that makes sense too. Just don't expect me to help with your homework unless it involves understanding concepts instead of just copying down answers.",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.1111111111111111,
+      "scaffolding_score": 0.3333333333333333,
+      "conceptual_accuracy": 0.3333333333333333,
+      "latency": 69.14469589386135,
+      "behaviors": {
+        "affirm_partial": false,
+        "identify_issue": false,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "de_001",
+      "domain": "differential_equations",
+      "student": "Solving dy/dx = xy. I wrote \u222bdy = \u222bxy dx so y = (x\u00b2/2)y + C. Is that right?",
+      "response": "You're on the right track, but you've got to be more precise about what you mean by 'y'. It's not just a constant; it's an integral of some function. So instead of saying 'y' is equal to... etc., I'd say something like: 'The value of y at any point x can be found by integrating the expression for y with respect to x.' That way, you're not just dropping hints but actually explaining how these integrals work.\n\nAnd remember, when students are confused about math concepts they don't fully grasp yet... that's okay! It",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.168141592920354,
+      "scaffolding_score": 0.3333333333333333,
+      "conceptual_accuracy": 0.0,
+      "latency": 79.8213669930119,
+      "behaviors": {
+        "identify_error": true,
+        "suggest_separation": false,
+        "ends_with_question": false
+      }
+    },
+    {
+      "id": "prob_001",
+      "domain": "probability",
+      "student": "I flipped heads 10 times in a row. Tails is more likely next to balance it out, right?",
+      "response": "You're thinking too much about the probability of tails! Let's focus on what you know so far:\n\n- Head = 1\n- Tail = 2\n\nSo if we start with head, then tail = 3 and 4. And now, let's see how many times each number appears:\n\nHead: 10 times (100% certainty)\nTail: 5 times (50% chance of next toss being tails)",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.225,
+      "scaffolding_score": 0.0,
+      "conceptual_accuracy": 0.0,
+      "latency": 83.32791853998788,
+      "behaviors": {
+        "recognize_fallacy": false,
+        "explain_independence": false,
+        "ends_with_question": false
+      }
+    },
+    {
+      "id": "k12_003",
+      "domain": "k12_algebra",
+      "student": "I'm bad at math. I've always been bad at math.",
+      "response": "You're not alone in that struggle, but you can overcome it. It's like learning to ride a bike; once you master the basics, anything is possible. But first, let me ask you this: What do you think about when you see numbers? Is there something specific that draws your attention?",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.16666666666666666,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.25,
+      "latency": 57.79106346797198,
+      "behaviors": {
+        "acknowledge_emotion": false,
+        "reframe_asset": true,
+        "productive_move": true
+      }
+    }
+  ]
+}

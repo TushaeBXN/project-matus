@@ -17,9 +17,9 @@ if command -v llama-server &>/dev/null; then
 else
     LLAMA_SERVER="$BIN_DIR/llama-server"
 fi
-GGUF_PATH="$MODELS_DIR/self-after-dark-3b.Q4_K_M.gguf"
+GGUF_PATH="$MODELS_DIR/matus-3b-Q4_K_M.gguf"
 # Using mradermacher's public open-source repository (does not require login/auth)
-GGUF_URL="https://huggingface.co/mradermacher/self-after-dark-3b-GGUF/resolve/main/self-after-dark-3b.Q4_K_M.gguf"
+GGUF_URL="https://huggingface.co/mradermacher/self-after-dark-3b-GGUF/resolve/main/matus-3b-Q4_K_M.gguf"
 
 mkdir -p "$BIN_DIR" "$MODELS_DIR" "$OLLAMA_MODELS"
 
@@ -109,25 +109,22 @@ download_llamacpp() {
     echo "✅ llama-server ready ($LATEST_TAG / macos-$LLAMA_ARCH)."
 }
 
-# ─── Menu ─────────────────────────────────────────────────────────────────────
 echo ""
 echo "╔══════════════════════════════════════════════════╗"
-echo "║        Project Matus — Local Engine Launcher     ║"
-echo "╠══════════════════════════════════════════════════╣"
-echo "║  1) TinyDolphin         (via Portable Ollama)    ║"
-echo "║  2) SelfAfterDark-3B    (via Ollama GGUF Import) ║"
-echo "║  3) SelfAfterDark-3B    (via Raw llama.cpp)      ║"
-echo "║  4) Dual-Brain Core     (Consensus Loop: 1 + 3)  ║"
+echo "║              Project Matus — Starting            ║"
 echo "╚══════════════════════════════════════════════════╝"
 echo ""
-read -rp "Enter option [1-4]: " option
 
 # ─── Helper: start standalone, isolated Ollama server ───────────────────────
 start_ollama() {
     # Check if our custom isolated port is already bound
     if lsof -Pi :11435 -sTCP:LISTEN -t >/dev/null ; then
         echo "✅ Standalone Ollama already running on isolated port 11435."
-        OLLAMA_CMD=("$OLLAMA_EXE")
+        if [ -f "$OLLAMA_EXE" ]; then
+            OLLAMA_CMD=("$OLLAMA_EXE")
+        else
+            OLLAMA_CMD=("ollama")
+        fi
         OLLAMA_PID=""
         return 0
     fi
@@ -162,59 +159,9 @@ start_llamacpp() {
     wait_for_url "http://localhost:8080/health"
 }
 
-# ─── Option 1: TinyDolphin via Ollama ────────────────────────────────────────
-if [ "$option" = "1" ]; then
-    start_ollama
-    trap "kill $OLLAMA_PID 2>/dev/null; echo '🔌 Ollama server stopped.'" EXIT
+# ─── Boot ────────────────────────────────────────────────────────────────────
+start_llamacpp
+trap "kill $LLAMA_PID 2>/dev/null; echo '🔌 Matus engine stopped.'" EXIT
 
-    echo "🧠 Pulling TinyDolphin base weights (first run only)..."
-    "${OLLAMA_CMD[@]}" pull tinydolphin
-
-    echo "🛠  Building matus-dolphin persona..."
-    "${OLLAMA_CMD[@]}" create matus-dolphin -f "$REPO_DIR/Modelfile.tinydolphin"
-
-    echo "✅ Launching Matus Dolphin Core..."
-    python3 "$REPO_DIR/main.py" --engine ollama --model matus-dolphin
-
-# ─── Option 2: SelfAfterDark via Ollama ──────────────────────────────────────
-elif [ "$option" = "2" ]; then
-    start_ollama
-    trap "kill $OLLAMA_PID 2>/dev/null; echo '🔌 Ollama server stopped.'" EXIT
-    download_gguf
-
-    echo "🛠  Building matus-darkbrain persona..."
-    "${OLLAMA_CMD[@]}" create matus-darkbrain -f "$REPO_DIR/Modelfile.selfafterdark"
-
-    echo "✅ Launching Matus Dark-Brain Intelligence..."
-    python3 "$REPO_DIR/main.py" --engine ollama --model matus-darkbrain
-
-# ─── Option 3: SelfAfterDark via raw llama.cpp server ────────────────────────
-elif [ "$option" = "3" ]; then
-    start_llamacpp
-    trap "kill $LLAMA_PID 2>/dev/null; echo '🔌 llama.cpp server stopped.'" EXIT
-
-    echo "✅ Launching Matus Dark-Brain Intelligence (llama.cpp)..."
-    python3 "$REPO_DIR/main.py" --engine llamacpp
-
-# ─── Option 4: Dual-Brain Consensus Core ──────────────────────────────────────
-elif [ "$option" = "4" ]; then
-    # Boot both servers
-    start_ollama
-    start_llamacpp
-    
-    # Clean up both servers on exit
-    trap 'echo "🧹 Shutting down Dual-Brain servers..."; kill "$OLLAMA_PID" "$LLAMA_PID" 2>/dev/null; echo "🔌 Both servers stopped."' EXIT
-
-    echo "🧠 Pulling TinyDolphin base weights (first run only)..."
-    "${OLLAMA_CMD[@]}" pull tinydolphin
-
-    echo "🛠  Building matus-dolphin persona..."
-    "${OLLAMA_CMD[@]}" create matus-dolphin -f "$REPO_DIR/Modelfile.tinydolphin"
-
-    echo "✅ Launching Matus Dual-Brain Consensus Core..."
-    python3 "$REPO_DIR/main.py" --engine dualbrain --model matus-dolphin
-
-else
-    echo "❌ Invalid selection. Please choose 1, 2, 3, or 4."
-    exit 1
-fi
+echo "✅ Launching Matus..."
+python3 "$REPO_DIR/main.py"

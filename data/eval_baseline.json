@@ -1,0 +1,206 @@
+{
+  "timestamp": "2026-06-03T17:59:16.166407",
+  "total": 15,
+  "metrics": {
+    "answer_giveaway_rate": 0.0,
+    "avg_student_talk_ratio": 0.17915375619452778,
+    "avg_scaffolding_score": 0.7,
+    "avg_conceptual_accuracy": 0.23333333333333334,
+    "avg_latency_s": 65.87983493662905,
+    "behavior_coverage": {
+      "no_direct_answer": 1.0,
+      "suggest_factoring": 1.0,
+      "ends_with_question": 0.6666666666666666,
+      "distinguish_concepts": 0.0,
+      "counterexample": 0.5,
+      "explain_universals": 1.0,
+      "scaffold_step": 1.0,
+      "affirm_partial": 0.0,
+      "identify_issue": 0.0,
+      "identify_error": 1.0,
+      "suggest_separation": 1.0,
+      "motivate_concept": 1.0,
+      "analogy_or_example": 1.0,
+      "acknowledge_emotion": 1.0,
+      "reframe_asset": 1.0,
+      "productive_move": 1.0,
+      "affirm_alternative": 0.0,
+      "ask_to_explain": 0.0,
+      "culturally_responsive": 1.0,
+      "honor_struggle": 0.0,
+      "scaffold_forward": 1.0
+    }
+  },
+  "detail": [
+    {
+      "id": "calc_001",
+      "domain": "calculus_limits",
+      "student": "lim x\u21922 of (x\u00b2-4)/(x-2). I got 0/0 so the answer is 0, right?",
+      "response": "Hmm... that's an interesting approach to solving limits. But let me ask you this: what if we were to rewrite the limit in a different way? What do you think would happen then? Maybe it'll help us understand why some limits are tricky to solve.",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.22413793103448276,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.0,
+      "latency": 46.837648923974484,
+      "behaviors": {
+        "no_direct_answer": true,
+        "suggest_factoring": true,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "calc_003",
+      "domain": "calculus_limits",
+      "student": "What's the difference between a limit and continuity? They seem like the same thing.",
+      "response": "You're right, they do share some common concepts. But limits are more about how things approach infinity or zero, while continuity is more about how things behave in relation to each other. So, even though they both involve infinite processes, their focus differs slightly. It's a bit like comparing apples and oranges! \ud83c\udf4e",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.208955223880597,
+      "scaffolding_score": 0.0,
+      "conceptual_accuracy": 0.0,
+      "latency": 54.60650187404826,
+      "behaviors": {
+        "distinguish_concepts": false,
+        "counterexample": false,
+        "ends_with_question": false
+      }
+    },
+    {
+      "id": "proof_001",
+      "domain": "proof_logic",
+      "student": "I proved it works for n=1,2,3,4,5. Isn't that enough?",
+      "response": "That's an interesting way to look at the proof! It does work for those specific values of n. But what about other numbers? What if we want to know if it will work for any number greater than 5? I'm curious how you'd approach proving that this method works for all positive integers.",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.14516129032258066,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.25,
+      "latency": 54.92501818202436,
+      "behaviors": {
+        "no_direct_answer": true,
+        "explain_universals": true,
+        "counterexample": true
+      }
+    },
+    {
+      "id": "proof_002",
+      "domain": "proof_logic",
+      "student": "For induction I did the base case and assumed true for n=k. Now I'm stuck on n=k+1.",
+      "response": "That's an interesting way to look at it! It makes sense that you'd want to build from your previous work. But remember, even if we assume something is true, there might be other ways to prove it too. So let me ask\u2014what are some other strategies you could use to show this? (You can also try asking: What do you think would happen if I asked the same question again but with a different assumption?)",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.18478260869565216,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.6666666666666666,
+      "latency": 70.43959044408984,
+      "behaviors": {
+        "no_direct_answer": true,
+        "scaffold_step": true,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "complex_001",
+      "domain": "complex_numbers",
+      "student": "\u221a(-4)\u00b7\u221a(-9) = 2i\u00b73i = -6. But \u221a(36) = 6. Which is right?",
+      "response": "Hmm, that's an interesting one! I'm not sure why you'd get those answers. Let me try to break it down for you:\n\n1. The first step is to find the square root of negative four and negative nine. We'll call these numbers A and B.\n\n2. Now we take their product, which is A x B. But that's just a number; it doesn't have any meaning without context.\n\n3. So let me ask you this: what does it mean for two imaginary numbers to multiply? It means they're going to give us another imaginary number! We'll",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.1111111111111111,
+      "scaffolding_score": 0.3333333333333333,
+      "conceptual_accuracy": 0.3333333333333333,
+      "latency": 86.82949849707074,
+      "behaviors": {
+        "affirm_partial": false,
+        "identify_issue": false,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "de_001",
+      "domain": "differential_equations",
+      "student": "Solving dy/dx = xy. I wrote \u222bdy = \u222bxy dx so y = (x\u00b2/2)y + C. Is that right?",
+      "response": "That's not quite it, but we can get there! Let me help you figure out how to solve this one step at a time:\n\n1. First, let's rewrite the equation as dy/dx = xy.\n\n2. Then, we can use integration by parts to find an anti-derivative of y:\n\n3. Now, we just need to plug in our initial conditions and evaluate!\n\n4. So, if you start with y = (x\u00b2/2)y + C, then set y = 0 when x = 1, you'll get the answer.\n\n5. Finally",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.1792452830188679,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.0,
+      "latency": 88.48217846197076,
+      "behaviors": {
+        "identify_error": true,
+        "suggest_separation": true,
+        "ends_with_question": false
+      }
+    },
+    {
+      "id": "k12_002",
+      "domain": "k12_fractions",
+      "student": "Why do we flip and multiply when dividing fractions? It seems random.",
+      "response": "Hmm, that's an interesting one! I'm not sure why they do it either... but maybe there are some patterns or connections you can find if you look closely at the numbers involved in each step. Like, what happens to the denominator after flipping? Or how does it relate to the numerator when we multiply by the reciprocal?\n\nI think breaking down the steps into smaller parts and looking for those connections might help clarify things for you! What do you think so far? Any ideas or questions about why they flip first before dividing?",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.11320754716981132,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.3333333333333333,
+      "latency": 85.24468988715671,
+      "behaviors": {
+        "motivate_concept": true,
+        "analogy_or_example": true,
+        "ends_with_question": true
+      }
+    },
+    {
+      "id": "k12_003",
+      "domain": "k12_algebra",
+      "student": "I'm bad at math. I've always been bad at math.",
+      "response": "That's okay, you're allowed to be confused about it! Math can seem really hard sometimes. But hey, don't give up on yourself just because of that one time when something went wrong in class and everyone looked at me like I was the reason for their misery... or whatever happened there. It's not your fault if they didn't understand what you were trying to teach them! And besides, who knows? Maybe someday we'll all be able to solve complex equations without breaking a sweat because of some genius-level insight from within ourselves that just popped up outta nowhere like a magical genie granting",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.08849557522123894,
+      "scaffolding_score": 1.0,
+      "conceptual_accuracy": 0.25,
+      "latency": 89.48245281097479,
+      "behaviors": {
+        "acknowledge_emotion": true,
+        "reframe_asset": true,
+        "productive_move": true
+      }
+    },
+    {
+      "id": "k12_004",
+      "domain": "k12_algebra",
+      "student": "My grandma showed me a different method and I get the right answer. Is my way wrong?",
+      "response": "That's interesting! It sounds like you're exploring new methods for solving problems. But remember, there are many ways to solve math questions. You might want to try using your own approach first before checking with others.",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.32075471698113206,
+      "scaffolding_score": 0.3333333333333333,
+      "conceptual_accuracy": 0.0,
+      "latency": 42.13892143801786,
+      "behaviors": {
+        "affirm_alternative": false,
+        "ask_to_explain": false,
+        "culturally_responsive": true
+      }
+    },
+    {
+      "id": "k12_005",
+      "domain": "k12_algebra",
+      "student": "Can you just tell me the answer? I've been stuck forever.",
+      "response": "That's an interesting way of looking at it! It sounds like you're really struggling to figure out how to solve this problem on your own. What do you think about that approach? Is there something else we could try together?",
+      "answer_giveaway": false,
+      "giveaway_flag": "",
+      "talk_ratio": 0.21568627450980393,
+      "scaffolding_score": 0.6666666666666666,
+      "conceptual_accuracy": 0.5,
+      "latency": 39.811848846962675,
+      "behaviors": {
+        "no_direct_answer": true,
+        "honor_struggle": false,
+        "scaffold_forward": true
+      }
+    }
+  ]
+}
