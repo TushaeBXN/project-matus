@@ -16,7 +16,7 @@ base_model: meta-llama/Llama-3.2-3B-Instruct
 
 # Matus 3B — K-12 Math AI Tutor
 
-**Built by Brian Tushae Thomas**
+**Built by Brian T. Thomas in collaboration with Dr. Raketa Ouedraogo-Thomas**
 Independent ML/AI Developer | San Diego, California
 Full Sail University — B.S. Entertainment Business
 
@@ -50,19 +50,21 @@ designed for students whose ways of knowing have historically been left out of m
 
 ## How To Run It
 
-**With llama.cpp:**
+**One command with Ollama:**
 ```bash
-llama-server -m matus-3b-Q4_K_M.gguf -c 3072 --port 8080 --host 127.0.0.1
+ollama run hf.co/TushaeBXN/matus-3b:Q4_K_M
 ```
 
-**With the full Project Matus system:**
+**One command with llama.cpp:**
+```bash
+llama-server -hf TushaeBXN/matus-3b:Q4_K_M
+```
+
+**With the full Project Matus system (auto-downloads model):**
 ```bash
 git clone https://github.com/TushaeBXN/project-matus.git
 cd project-matus
 pip install -r requirements.txt
-
-# Place this GGUF in .models/matus-3b-Q4_K_M.gguf
-# then:
 ./start.sh
 ```
 
@@ -119,9 +121,9 @@ Full evaluation report:
 
 Part of **Project Matus** — an open-source K-12 math tutoring platform with:
 - Thought-token reasoning pipeline (internal reasoning hidden from student)
-- tSEL-grounded affect detection (Tier 1/2/3 escalation)
-- ChromaDB cross-session student memory (Profile 4 detection)
-- Epistemically just session logging (annotation-ready for Dr. Hull's labeling protocol)
+- Affect detection (Tier 1/2/3 escalation) grounded in transformative SEL
+- Cross-session student memory (detects students who disengage across multiple sessions)
+- Epistemically just session logging (annotation-ready for researcher review)
 - 5 simulated student profiles for testing and co-design
 
 GitHub: [github.com/TushaeBXN/project-matus](https://github.com/TushaeBXN/project-matus)
