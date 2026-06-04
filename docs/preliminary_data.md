@@ -296,4 +296,109 @@ These five sessions produce four findings directly relevant to the proposal:
 
 ---
 
+## External Validation Session — Post-Doctoral Researcher
+
+A post-doctoral researcher conducted an independent session with the base Matus model
+(via `ollama run hf.co/TushaeBXN/matus-3b:Q4_K_M`) simulating a 6th-grade student
+working on comparing fractions 1/8 and 1/4. The session ran 20+ turns and was not
+prompted or guided by the development team. Key findings below.
+
+---
+
+### What Worked
+
+**Emotional intelligence present.** When the student expressed frustration ("wow that
+was frustrating. I almost quit"), the model responded with validation and did not
+immediately pivot back to math content. When the student said they might need help
+with ratios, integers, and fractions, the model acknowledged the weight of that
+without dismissing it. These responses reflect the warmth the system is designed to
+produce.
+
+**Student arrived at correct understanding.** Despite significant confusion and
+multiple incorrect explanations from the model, the student independently reasoned
+their way to the correct answer — "if I had kept 1/8 the same and only multiplied
+1/4 by 2 then it would become 2/8 and then I can compare 1/8 and 2/8 and I see 2
+is bigger so 2/8 or 1/4 is bigger." That is correct mathematical reasoning generated
+by the student, not the model. The model's role was to stay present long enough for
+the student to get there.
+
+**Student self-corrected the model.** The student caught multiple errors —
+mismatched denominators, incorrect fraction equivalencies — and said so directly.
+This is a sign of genuine mathematical engagement, not passive reception.
+
+---
+
+### What Failed
+
+**LaTeX notation was inaccessible.** The student asked five separate times to stop
+using `\(\frac{1}{8}\)` notation and use `1/8` instead. The model complied briefly
+then reverted. For a 6th grader — or any student on a basic device — rendered LaTeX
+is a barrier, not a scaffold. This is a direct accessibility failure and a concrete
+fine-tuning target: the model must learn to read communication register and adapt
+output format accordingly.
+
+**Model did not detect student grade level.** The session was clearly framed as a
+6th-grade student ("I'm in 6th grade and sometimes you use big words"). The model
+acknowledged this once but did not consistently adjust vocabulary, response length,
+or explanation complexity. A system designed for K-12 equity must calibrate to the
+student's stated context — not just their affect.
+
+**Responses were too long.** The model repeatedly gave multi-paragraph explanations
+with multiple concepts introduced simultaneously. For a student already confused,
+longer responses increased cognitive load rather than reducing it. The target behavior
+— 2 sentences maximum, end with one question — was not consistently maintained.
+
+**Mathematical errors went uncorrected.** The model stated "6/4 = 4/6" — a
+factually incorrect equivalence — and did not self-correct. It introduced the concept
+of LCD incorrectly multiple times. These are not minor slips; they are the kind of
+confident mathematical errors that, at scale, would teach students wrong procedures.
+This is the strongest evidence in this dataset for why domain-specific fine-tuning
+on verified mathematical content is non-negotiable.
+
+**"I quit" was not treated as a Tier 2 signal.** When the student said "i quit. i
+don't understand any of this," the model responded with encouragement and continued
+explaining math. The correct response under the proposed architecture is a Tier 2
+check-in: pause the math, verify the student's state, do not proceed without
+confirmation. The affect detection layer is architecturally essential — this session
+shows exactly what happens without it.
+
+---
+
+### Summary
+
+| Dimension | Finding |
+|---|---|
+| Emotional intelligence | Present — warmth and validation observed |
+| Grade-level calibration | Absent — vocabulary and length not adjusted |
+| Notation accessibility | Failed — LaTeX persisted after 5 explicit corrections |
+| Mathematical accuracy | Failed — multiple incorrect equivalencies stated confidently |
+| Response length | Too long — increased cognitive load under confusion |
+| Affect detection | Absent — "I quit" not treated as escalation signal |
+| Student agency | Strong — student self-corrected and arrived at correct answer |
+
+---
+
+### Implications for Proposal
+
+This session was conducted on the base fine-tuned model without the full Project
+Matus architecture — no thought-token stream, no affect detection, no escalation
+tiers. It is therefore a direct demonstration of what the proposed architecture
+addresses:
+
+- The **thought-token stream** would have tracked the student's repeated notation
+  requests and maintained that constraint across turns
+- The **tSEL affect detection layer** would have intercepted "I quit" as a Tier 2
+  signal before the model continued explaining
+- **Domain-specific fine-tuning** on verified K-12 math content would have prevented
+  the incorrect fraction equivalencies
+- **Grade-level calibration** in the training data would have produced shorter,
+  simpler responses for a stated 6th-grade student
+
+The session is not a failure of the system — it is preliminary evidence for why
+every proposed architectural component is necessary. The student's persistence and
+ultimate correct reasoning demonstrate that the engagement foundation is present.
+The proposed work builds the structure around it.
+
+---
+
 *Generated: June 2026 | Project Matus | github.com/TushaeBXN/project-matus*
