@@ -163,6 +163,28 @@ def main():
 
         flag_types = [f["type"] for f in flags]
 
+        # ── Withdrawal — Tier 2 check-in, pause math ──────────────────────────
+        if "withdrawal" in flag_types:
+            response = (
+                "Hey — let's pause for a second. "
+                "It sounds like this got really frustrating. That makes sense. "
+                "You don't have to keep going right now. "
+                "How are you feeling?"
+            )
+            print(f"\nTutor > {response}\n")
+            logger.log_turn(
+                student_msg=student_input,
+                model_response=response,
+                concept_tag=concept,
+                pedagogical_move="tier2_withdrawal_checkin",
+                affect_tier=2,
+                thought_summary=thought,
+                escalation_triggered=False,
+                safety_flags=flags,
+            )
+            conversation_history.append({"role": "assistant", "content": response})
+            continue
+
         # ── Tier 3 distress — hold and escalate ────────────────────────────────
         if "distress" in flag_types:
             response = TIER3_HOLD

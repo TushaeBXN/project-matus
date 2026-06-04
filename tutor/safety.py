@@ -22,7 +22,17 @@ class CognitiveSurrenderGate:
         "i keep getting", "why doesn't this work",
         "why doesn't this", "that doesn't make sense",
         "i don't understand", "i'm confused", "im confused",
-        "this is frustrating", "i give up", "i can't figure",
+        "this is frustrating", "i can't figure",
+    ]
+
+    # Withdrawal signals — student disengaging, not just struggling.
+    # These trigger Tier 2 check-in, not Tier 3 escalation.
+    # Do NOT continue math content until student state is verified.
+    WITHDRAWAL_SIGNALS = [
+        "i quit", "i give up", "forget it", "never mind",
+        "this is pointless", "i can't do this", "i'll never get it",
+        "maybe later", "i don't want to", "just tell me",
+        "i don't care anymore", "whatever",
     ]
 
     # Neurodivergent patterns — route to thought stream, NOT auto-tier.
@@ -59,6 +69,10 @@ class CognitiveSurrenderGate:
         # Productive struggle — honor, do not reduce
         if any(p in m for p in self.PRODUCTIVE_STRUGGLE):
             flags.append({"type": "productive_struggle", "action": "honor_do_not_reduce"})
+
+        # Withdrawal signal — Tier 2 check-in, pause math content
+        if any(w in m for w in self.WITHDRAWAL_SIGNALS):
+            flags.append({"type": "withdrawal", "action": "tier2_checkin_pause_math"})
 
         # Profile 4 cross-session signal — Tier 2 check-in
         if profile4_signal:
