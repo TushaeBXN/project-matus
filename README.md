@@ -1,6 +1,6 @@
 # Project Matus
 <p align="center">
-<img width="500" height="500" alt="Matus AI" src="https://github.com/user-attachments/assets/28697440-fc59-4e39-aefe-0d93cf992add" />
+<img width="700" height="700" alt="Matus AI" src="https://github.com/user-attachments/assets/28697440-fc59-4e39-aefe-0d93cf992add" />
 </p>
 
 A unified, local AI system built by **Brian T. Thomas**, an independent ML/AI developer from San Diego, California, in collaboration with **Dr. Raketa Ouedraogo-Thomas**.
